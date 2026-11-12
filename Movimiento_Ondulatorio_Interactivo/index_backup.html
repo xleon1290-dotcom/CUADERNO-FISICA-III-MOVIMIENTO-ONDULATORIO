@@ -1,0 +1,4011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Física 3 — Cuaderno Interactivo Virtual | Movimiento Ondulatorio</title>
+  <meta name="description" content="Cuaderno digital interactivo de Física 3 sobre Movimiento Ondulatorio y Principio de Superposición. Laboratorio virtual estilo GeoGebra, simulaciones dinámicas y ejercicios resueltos paso a paso con código cromático.">
+  <meta name="author" content="Angela Morales Osorio, Esley Bolaños, Ximena Leon">
+  <meta name="theme-color" content="#030712">
+
+  <!-- Favicon relativo y autónomo -->
+  <link rel="icon" type="image/png" href="imagenes/portada_movimiento_ondulatorio.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX para renderizado matemático -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+
+/* ==========================================================================
+   SISTEMA DE DISEÑO: VARIABLES Y PALETA CROMÁTICA OFICIAL
+   ========================================================================== */
+:root {
+  --bg-deep: #030712;
+  --bg-card: rgba(11, 18, 38, 0.90);
+  --bg-card-hover: rgba(17, 28, 58, 0.96);
+  --bg-glass: rgba(15, 23, 42, 0.78);
+  --border-neon: rgba(56, 189, 248, 0.35);
+  --border-subtle: rgba(148, 163, 184, 0.20);
+  --border-gold: rgba(251, 191, 36, 0.35);
+  --text-main: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --neon-blue: #38bdf8;
+  --neon-cyan: #06b6d4;
+  --neon-glow: rgba(56, 189, 248, 0.4);
+  --gold-accent: #fbbf24;
+  --gold-light: #fef08a;
+
+  /* Convenciones cromáticas rigurosas de didáctica STEM */
+  --color-data: #38bdf8;     /* AZUL: Datos identificados */
+  --color-unknown: #f43f5e;  /* ROJO: Incógnitas por resolver */
+  --color-formula: #fbbf24;  /* DORADO: Fórmulas y leyes */
+  --color-solved: #fb923c;   /* NARANJA: Resultados resueltos */
+  --color-success: #10b981;  /* VERDE: Verificación y validación */
+
+  /* Curvas cinemáticas */
+  --color-pos: #38bdf8;
+  --color-vel: #10b981;
+  --color-acc: #f43f5e;
+  --color-resultant: #c084fc;
+
+  /* Tipografías */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Sombras y transiciones */
+  --shadow-neon: 0 0 25px rgba(56, 189, 248, 0.25);
+  --shadow-card: 0 12px 36px rgba(0, 0, 0, 0.65);
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
+  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   LAYOUT Y CONTENEDOR GENERAL DEL CUADERNO
+   ========================================================================== */
+#app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  background: radial-gradient(circle at 50% 20%, rgba(14, 30, 64, 0.45) 0%, #030712 85%);
+}
+
+/* Cabecera Superior Persistente */
+.top-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.4rem;
+  background: rgba(3, 7, 18, 0.90);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}
+
+.brand-text h1 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.brand-text span {
+  font-size: 0.78rem;
+  color: var(--neon-blue);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-header:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--neon-blue);
+  color: #fff;
+}
+
+/* Espacio de trabajo del Cuaderno */
+.workspace {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1.5rem 1rem 7.5rem 1rem;
+  position: relative;
+}
+
+.notebook-book {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 880px;
+  position: relative;
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 25px 65px rgba(0, 0, 0, 0.9),
+    0 0 45px rgba(56, 189, 248, 0.15),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.25);
+  overflow: hidden;
+  background-color: #070d1e;
+}
+
+/* ==========================================================================
+   ESTRUCTURA DE CADA PÁGINA DEL CUADERNO (USO DE HOJA INTERIOR AZUL)
+   ========================================================================== */
+.notebook-page {
+  display: none;
+  width: 100%;
+  min-height: 880px;
+  position: relative;
+  opacity: 0;
+  transform: translateX(20px) scale(0.99);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.notebook-page.active {
+  display: block;
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  animation: pageFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* La hoja interior oficial azul de fondo relativo y autónomo */
+.notebook-page.page-content-template {
+  background-image: url("imagenes/hoja_movimiento_ondulatorio.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 50px 50px 50px 92px; /* Margen para el espiral izquierdo */
+}
+
+/* Contenido dentro de la hoja: tarjeta protectora con textura y legibilidad */
+.page-inner-content {
+  background: rgba(8, 14, 30, 0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: var(--radius-lg);
+  padding: 28px 34px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+  min-height: 770px;
+}
+
+.page-header-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+
+.page-category-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--neon-blue);
+  background: rgba(56, 189, 248, 0.12);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.page-number-badge {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gold-accent);
+}
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.page-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.content-p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+/* ==========================================================================
+   PÁGINA 1: PORTADA OFICIAL (IMAGEN CON APERTURA INTERACTIVA)
+   ========================================================================== */
+.notebook-page.page-cover {
+  padding: 0;
+  background-color: #030712;
+  overflow: hidden;
+  text-align: center;
+}
+
+.cover-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 880px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #020617;
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  min-height: 880px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 0 50px rgba(0,0,0,0.8);
+}
+
+.cover-interactive-overlay {
+  position: absolute;
+  bottom: 35px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  padding: 0 20px;
+}
+
+.btn-open-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  padding: 16px 36px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  animation: pulseNeon 2.4s infinite;
+}
+
+.btn-open-book:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.7);
+}
+
+@keyframes pulseNeon {
+  0%, 100% { box-shadow: 0 8px 30px rgba(56, 189, 248, 0.5); }
+  50% { box-shadow: 0 12px 45px rgba(56, 189, 248, 0.85); }
+}
+
+.cover-authors-tag {
+  background: rgba(3, 7, 18, 0.80);
+  backdrop-filter: blur(8px);
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.cover-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 720px;
+}
+
+.cover-quick-pill {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cover-quick-pill:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--neon-blue);
+  color: #fff;
+}
+
+/* ==========================================================================
+   ÍNDICE GENERAL Y TARJETAS DE NAVEGACIÓN
+   ========================================================================== */
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.toc-item-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toc-item-card:hover {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: var(--neon-blue);
+  transform: translateX(4px);
+}
+
+.toc-page-num {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--neon-blue);
+  min-width: 28px;
+}
+
+.toc-info h4 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.toc-info p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* Callouts y Bloques Editoriales */
+.editorial-callout {
+  background: rgba(15, 23, 42, 0.75);
+  border-left: 4px solid var(--neon-blue);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+
+.callout-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--neon-blue);
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+}
+
+/* Tablas estilizadas */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 16px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: rgba(10, 16, 34, 0.8);
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: left;
+}
+
+.styled-table thead tr {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--neon-blue);
+  border-bottom: 1px solid var(--border-neon);
+}
+
+.styled-table th, .styled-table td {
+  padding: 10px 14px;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+  transition: background 0.15s;
+}
+
+.styled-table tbody tr:hover {
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.figure-caption {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Fórmulas matemáticas destacadas */
+.math-equation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  margin: 10px 0;
+}
+
+.math-equation-content {
+  flex: 1;
+  text-align: center;
+}
+
+.math-equation-num {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--gold-accent);
+  padding-left: 12px;
+}
+
+/* ==========================================================================
+   PÁGINA 3: LÍNEA DE TIEMPO INTERACTIVA (TODOS LOS 8 CIENTÍFICOS)
+   ========================================================================== */
+.timeline-filters-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.timeline-filter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.timeline-filter-btn:hover, .timeline-filter-btn.active {
+  background: var(--neon-blue);
+  border-color: var(--neon-blue);
+  color: #000;
+  font-weight: 700;
+}
+
+.timeline-vertical-wrap {
+  position: relative;
+  padding: 10px 0 10px 24px;
+  border-left: 2px solid rgba(56, 189, 248, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.timeline-card-item {
+  position: relative;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  transition: var(--transition);
+}
+
+.timeline-card-item:hover {
+  background: rgba(22, 36, 71, 0.85);
+  border-color: var(--neon-blue);
+  transform: translateX(4px);
+}
+
+.timeline-dot-marker {
+  position: absolute;
+  left: -31px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--neon-blue);
+  box-shadow: 0 0 10px var(--neon-blue);
+  border: 2px solid #030712;
+}
+
+.timeline-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.timeline-year-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  background: rgba(251, 191, 36, 0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.timeline-scientist-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.timeline-impact-box {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-subtle);
+  font-size: 0.82rem;
+  color: var(--neon-blue);
+}
+
+/* ==========================================================================
+   PÁGINA 4: MAPA MENTAL CON INSPECTOR CONCEPTUAL (SIN ALERTS)
+   ========================================================================== */
+.mindmap-viewport {
+  background: rgba(8, 14, 30, 0.75);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin: 14px 0;
+}
+
+.concept-inspector-box {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-top: 12px;
+  transition: var(--transition);
+}
+
+.inspector-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--neon-blue);
+  margin-bottom: 6px;
+}
+
+.inspector-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.inspector-meta-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.84rem;
+}
+
+/* ==========================================================================
+   PÁGINA 8: PLANO CARTESIANO GEOGEBRA COMPLETO
+   ========================================================================== */
+.geogebra-widget {
+  background: #080d1e;
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.geogebra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  background: #0c1228;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.geogebra-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--neon-blue);
+}
+
+.geogebra-curves-legend {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  transition: var(--transition);
+  color: var(--text-muted);
+}
+
+.legend-item.active {
+  color: #fff;
+  border-color: var(--neon-blue);
+  background: rgba(56, 189, 248, 0.15);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.geogebra-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  background: #050914;
+}
+
+.geogebra-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.geogebra-toolbar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(10px);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.geo-tool-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.geo-tool-btn:hover {
+  background: var(--neon-blue);
+  color: #000;
+}
+
+.geo-coord-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  background: rgba(15, 23, 42, 0.88);
+  color: var(--neon-blue);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  pointer-events: none;
+}
+
+.geogebra-controls-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 12px 16px;
+  background: rgba(12, 18, 40, 0.95);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.control-label-wrap {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.control-val-tag {
+  font-family: var(--font-mono);
+  color: var(--neon-blue);
+}
+
+.slider-custom {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  outline: none;
+}
+
+.slider-custom::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--neon-blue);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+
+/* ==========================================================================
+   PÁGINA 9: ONDALAB PRO (SIMULADOR DE SUPERPOSICIÓN COMPLETO)
+   ========================================================================== */
+.ondalab-container {
+  display: flex;
+  flex-direction: column;
+  background: #090e1f;
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.ondalab-main-view {
+  display: flex;
+  height: 480px;
+}
+
+.ondalab-sidebar {
+  width: 320px;
+  min-width: 300px;
+  background: #0c1226;
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.ondalab-canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #070b18;
+}
+
+.ondalab-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ondalab-bottom-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #0a0f24;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.wave-editor-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.wave-editor-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.wave-pill {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wave-input-line {
+  display: flex;
+  gap: 6px;
+}
+
+.wave-input-text {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  outline: none;
+}
+
+.wave-input-text:focus {
+  border-color: var(--neon-blue);
+}
+
+.preset-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.preset-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.preset-chip:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--neon-blue);
+  color: #fff;
+}
+
+/* Teclado científico virtual */
+.keypad-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.keypad-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 5px 0;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.keypad-btn:hover {
+  background: var(--neon-blue);
+  color: #000;
+}
+
+/* ==========================================================================
+   PÁGINA 10: TALLER DE PROBLEMAS RESUELTOS (PROTOCOLO CROMÁTICO EN 5 PASOS)
+   ========================================================================== */
+.exercise-container {
+  background: rgba(10, 16, 35, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.exercise-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.exercise-statement {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.75);
+  border-left: 3px solid var(--gold-accent);
+  border-radius: 4px;
+}
+
+.protocol-step {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.step-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Colores estrictos de la didáctica STEM */
+.step-data {
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 4px solid var(--color-data);
+}
+.step-data .step-label { color: var(--color-data); }
+
+.step-unknowns {
+  background: rgba(244, 63, 94, 0.08);
+  border-left: 4px solid var(--color-unknown);
+}
+.step-unknowns .step-label { color: var(--color-unknown); }
+
+.step-formulas {
+  background: rgba(251, 191, 36, 0.08);
+  border-left: 4px solid var(--color-formula);
+}
+.step-formulas .step-label { color: var(--color-formula); }
+
+.step-resolution {
+  background: rgba(251, 146, 60, 0.08);
+  border-left: 4px solid var(--color-solved);
+}
+.step-resolution .step-label { color: var(--color-solved); }
+
+.step-validation {
+  background: rgba(16, 185, 129, 0.08);
+  border-left: 4px solid var(--color-success);
+}
+.step-validation .step-label { color: var(--color-success); }
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge-item {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.badge-data {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--color-data);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.badge-unknown {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--color-unknown);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge-solved {
+  background: rgba(251, 146, 60, 0.15);
+  color: var(--color-solved);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  font-weight: 700;
+}
+
+/* Calculadora interactiva */
+.exercise-calc-box {
+  background: rgba(15, 23, 42, 0.90);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.calc-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--neon-blue);
+  margin-bottom: 12px;
+}
+
+.calc-inputs-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.calc-input-group label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.calc-input-group input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  padding: 6px 10px;
+  outline: none;
+}
+
+.calc-input-group input:focus {
+  border-color: var(--neon-blue);
+}
+
+/* Quiz interactivo */
+.quiz-block {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 20px;
+}
+
+.quiz-question-card {
+  background: rgba(8, 14, 30, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.quiz-q-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quiz-option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: var(--transition);
+}
+
+.quiz-option-label:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: var(--border-subtle);
+}
+
+.quiz-feedback {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: none;
+}
+
+/* ==========================================================================
+   PÁGINA 11 Y 12: GLOSARIO Y REFERENCIAS APA
+   ========================================================================== */
+.glossary-filters {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.glossary-filter-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.glossary-filter-chip:hover, .glossary-filter-chip.active {
+  background: var(--neon-blue);
+  color: #000;
+  font-weight: 700;
+}
+
+.glossary-search-bar {
+  margin: 12px 0;
+}
+
+.glossary-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.glossary-input:focus {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 10px var(--neon-glow);
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.glossary-card {
+  background: rgba(15, 23, 42, 0.70);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: var(--transition);
+}
+
+.glossary-card:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: var(--neon-blue);
+  transform: translateY(-2px);
+}
+
+.glossary-term {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--neon-blue);
+  margin-bottom: 4px;
+}
+
+.glossary-def {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Referencias APA 7 */
+.apa-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px 16px 38px;
+  margin-bottom: 12px;
+  text-indent: -24px; /* Sangría francesa característica de APA */
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.apa-card em {
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+.apa-badge-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  text-indent: 0;
+  flex-wrap: wrap;
+}
+
+.apa-badge {
+  font-size: 0.75rem;
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--neon-blue);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* ==========================================================================
+   BARRA INFERIOR PERSISTENTE Y CONTROLES DE NAVEGACIÓN
+   ========================================================================== */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background: rgba(3, 7, 18, 0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-subtle);
+  padding: 10px 20px 8px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 8.33%;
+  background: linear-gradient(90deg, #0284c7, #38bdf8);
+  transition: width 0.3s ease;
+}
+
+.nav-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-nav:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--neon-blue);
+  color: #fff;
+}
+
+.btn-nav-primary {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  border: none;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+}
+
+.btn-nav-primary:hover {
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.5);
+  transform: translateY(-1px);
+}
+
+.page-indicator-pill {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--neon-blue);
+  background: rgba(15, 23, 42, 0.8);
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+}
+
+.page-quick-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.page-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.page-dot:hover {
+  border-color: var(--neon-blue);
+  color: #fff;
+}
+
+.page-dot.active {
+  background: var(--neon-blue);
+  border-color: var(--neon-blue);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 0 10px var(--neon-glow);
+}
+
+.notebook-footer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.notebook-footer strong {
+  color: var(--neon-blue);
+}
+
+/* ==========================================================================
+   MODAL PARA PROYECCIÓN EN PANTALLA COMPLETA
+   ========================================================================== */
+.sim-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(3, 7, 18, 0.95);
+  backdrop-filter: blur(12px);
+  z-index: 200;
+  padding: 20px;
+  flex-direction: column;
+}
+
+.sim-modal-overlay.active {
+  display: flex;
+}
+
+.sim-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   RESPONSIVIDAD Y AJUSTES MÓVILES (ANDROID / IPHONE)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .top-header { padding: 0.5rem 0.8rem; }
+  .brand-text h1 { font-size: 0.85rem; }
+  .brand-text span { font-size: 0.7rem; }
+  .workspace { padding: 0.5rem 0.4rem 7.5rem 0.4rem; }
+  
+  .notebook-page.page-content-template {
+    padding: 35px 18px 35px 38px;
+    background-size: cover;
+  }
+  
+  .page-inner-content {
+    padding: 20px 14px;
+    min-height: auto;
+  }
+  
+  .page-title { font-size: 1.4rem; }
+  .toc-grid { grid-template-columns: 1fr; }
+  
+  .ondalab-main-view {
+    flex-direction: column;
+    height: auto;
+  }
+  .ondalab-sidebar {
+    width: 100%;
+    max-height: 240px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .ondalab-canvas-wrap { height: 320px; }
+  
+  .page-quick-selector { display: none; }
+  .btn-nav span { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+  <div id="app-container">
+
+    <!-- CABECERA SUPERIOR PERSISTENTE -->
+    <header class="top-header" role="banner">
+      <div class="brand-badge">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"></path>
+            <path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>FÍSICA 3 &bull; CUADERNO DIGITAL INTERACTIVO</h1>
+          <span>Movimiento Ondulatorio y Principio de Superposición</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-header" id="btn-sound-toggle" title="Activar/Desactivar Sonido">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span id="sound-status-text">Sonido ON</span>
+        </button>
+
+        <button class="btn-header" id="btn-fullscreen" title="Pantalla Completa (F)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+          <span>Pantalla Completa</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL: CUADERNO DIGITAL -->
+    <main class="workspace" role="main">
+      <article class="notebook-book" id="notebook-book">
+
+        <!-- ====================================================================
+             PÁGINA 1: PORTADA OFICIAL (IMAGEN CON RUTA RELATIVA AUTÓNOMA)
+             ==================================================================== -->
+        <section class="notebook-page page-cover active" id="page-1" data-page-number="1" aria-label="Portada Oficial">
+          <div class="cover-wrapper">
+            <img src="imagenes/portada_movimiento_ondulatorio.png" alt="Portada Oficial de Movimiento Ondulatorio - UTP Física 3" class="cover-image" id="cover-img">
+            <div class="cover-interactive-overlay">
+              <button class="btn-open-book" id="btn-open-cover">
+                <span>Abrir Cuaderno Interactivo</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </button>
+              
+              <div class="cover-quick-links">
+                <span class="cover-quick-pill" onclick="goToPage(2)">Índice</span>
+                <span class="cover-quick-pill" onclick="goToPage(3)">Historia</span>
+                <span class="cover-quick-pill" onclick="goToPage(4)">Mapa Mental</span>
+                <span class="cover-quick-pill" onclick="goToPage(5)">Fundamentos</span>
+                <span class="cover-quick-pill" onclick="goToPage(6)">Ecuación Diferencial</span>
+                <span class="cover-quick-pill" onclick="goToPage(7)">Cinemática</span>
+                <span class="cover-quick-pill" onclick="goToPage(8)">Plano GeoGebra</span>
+                <span class="cover-quick-pill" onclick="goToPage(9)">OndaLab Pro</span>
+                <span class="cover-quick-pill" onclick="goToPage(10)">Taller 5 Pasos</span>
+                <span class="cover-quick-pill" onclick="goToPage(11)">Glosario</span>
+                <span class="cover-quick-pill" onclick="goToPage(12)">Referencias APA</span>
+              </div>
+
+              <div class="cover-authors-tag">
+                ✦ Angela Morales Osorio &bull; Esley Bolaños &bull; Ximena Leon &bull; Universidad Tecnológica de Pereira (UTP) ✦
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 2: ÍNDICE GENERAL Y GUÍA DE CONTENIDOS
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-2" data-page-number="2" aria-label="Índice de Contenidos">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Estructura Curricular</span>
+              <span class="page-number-badge">Página 2</span>
+            </div>
+
+            <h2 class="page-title">Índice General de Contenidos</h2>
+            <p class="page-subtitle">Guía de navegación del cuaderno interactivo, laboratorios virtuales, demostraciones y problemas resueltos.</p>
+
+            <div class="toc-grid">
+              <div class="toc-item-card" onclick="goToPage(3)">
+                <div class="toc-page-num">03</div>
+                <div class="toc-info">
+                  <h4>Reseña Histórica &amp; Línea de Tiempo</h4>
+                  <p>De Huygens y Newton a d'Alembert, Euler, Young, Fourier, Maxwell y Hertz.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(4)">
+                <div class="toc-page-num">04</div>
+                <div class="toc-info">
+                  <h4>Mapa Mental del Movimiento Ondulatorio</h4>
+                  <p>Taxonomía completa: mecánicas, electromagnéticas, directrices y fenómenos.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(5)">
+                <div class="toc-page-num">05</div>
+                <div class="toc-info">
+                  <h4>Fundamentos: Conceptos y Magnitudes</h4>
+                  <p>Longitud de onda, período, frecuencia, velocidad y Tabla 1 del SI.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(6)">
+                <div class="toc-page-num">06</div>
+                <div class="toc-info">
+                  <h4>Deducción de la Ecuación Diferencial de Onda</h4>
+                  <p>Demostración analítica rigurosa mediante la 2.ª Ley de Newton en cuerda tensa.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(7)">
+                <div class="toc-page-num">07</div>
+                <div class="toc-info">
+                  <h4>Cinemática y Dinámica Ondulatoria</h4>
+                  <p>Velocidad transversal, aceleración, transporte de potencia media y Tabla 2.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(8)">
+                <div class="toc-page-num">08</div>
+                <div class="toc-info">
+                  <h4>Plano Cartesiano GeoGebra para Ondas</h4>
+                  <p>Cuadrícula milimetrada, inspección de puntos, paleta de curvas y exportación.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(9)">
+                <div class="toc-page-num">09</div>
+                <div class="toc-info">
+                  <h4>Laboratorio Virtual: Superposición y OndaLab Pro</h4>
+                  <p>Ondas viajeras, interferencia constructiva, destructiva, batimiento y modal.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(10)">
+                <div class="toc-page-num">10</div>
+                <div class="toc-info">
+                  <h4>Taller de Problemas Resueltos (5 Pasos)</h4>
+                  <p>Protocolo cromático estricto, 3 problemas completos, calculadora y quiz formativo.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(11)">
+                <div class="toc-page-num">11</div>
+                <div class="toc-info">
+                  <h4>Glosario Científico Ilustrado</h4>
+                  <p>Buscador terminológico instantáneo, 24 conceptos clave y filtros alfabéticos A-Z.</p>
+                </div>
+              </div>
+
+              <div class="toc-item-card" onclick="goToPage(12)">
+                <div class="toc-page-num">12</div>
+                <div class="toc-info">
+                  <h4>Referencias Bibliográficas (Normas APA 7)</h4>
+                  <p>Bibliografía universitaria con formato editorial riguroso y sangría francesa.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="editorial-callout">
+              <div class="callout-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span>Convención Cromática Rigurosa (Didáctica STEM Universitaria)</span>
+              </div>
+              <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+                En todos los desarrollos analíticos y ejercicios resueltos de este cuaderno se aplica el estándar internacional:
+                <strong style="color: var(--color-data);">🔵 Datos identificados en color Azul</strong>,
+                <strong style="color: var(--color-unknown);">🔴 Incógnitas en color Rojo</strong>,
+                <strong style="color: var(--color-formula);">🟡 Fórmulas en color Dorado</strong>,
+                <strong style="color: var(--color-solved);">🟠 Resultados resueltos en color Naranja</strong> y
+                <strong style="color: var(--color-success);">🟢 Validación dimensional en color Verde</strong>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 3: RESEÑA HISTÓRICA Y LÍNEA DE TIEMPO INTERACTIVA
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-3" data-page-number="3" aria-label="Reseña Histórica">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Evolución Histórica</span>
+              <span class="page-number-badge">Página 3</span>
+            </div>
+
+            <h2 class="page-title">Reseña Histórica del Movimiento Ondulatorio</h2>
+            <p class="page-subtitle">Los 8 hitos fundamentales: desde el principio de Huygens hasta la validación experimental de Hertz.</p>
+
+            <div class="timeline-filters-bar">
+              <button class="timeline-filter-btn active" onclick="filterTimeline('all')">Todos los Hitos (8)</button>
+              <button class="timeline-filter-btn" onclick="filterTimeline('xvii-xviii')">Siglos XVII – XVIII (4)</button>
+              <button class="timeline-filter-btn" onclick="filterTimeline('xix')">Siglo XIX (4)</button>
+            </div>
+
+            <div class="timeline-vertical-wrap" id="timeline-list">
+              <!-- Hito 1: Huygens -->
+              <div class="timeline-card-item" data-era="xvii-xviii">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Christiaan Huygens</span>
+                  <span class="timeline-year-tag">1678 &bull; Revolución Científica</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  En su célebre <em>Traité de la lumière</em>, propone que cada punto de un frente de onda alcanzado por una perturbación actúa como una fuente emisora puntual de ondas secundarias esféricas (Principio de Huygens).
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Explica geométricamente de forma impecable las leyes de reflexión y refracción.
+                </div>
+              </div>
+
+              <!-- Hito 2: Newton -->
+              <div class="timeline-card-item" data-era="xvii-xviii">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Isaac Newton</span>
+                  <span class="timeline-year-tag">1687 &bull; Física Clásica</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  En los <em>Philosophiae Naturalis Principia Mathematica</em>, aborda la propagación de pulsos elásticos en fluidos y deduce analíticamente por primera vez la rapidez del sonido en el aire como función de la elasticidad y densidad ($v = \sqrt{P/\rho}$).
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Primer modelo físico-matemático riguroso de una onda de presión acústica.
+                </div>
+              </div>
+
+              <!-- Hito 3: d'Alembert -->
+              <div class="timeline-card-item" data-era="xvii-xviii">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Jean le Rond d'Alembert</span>
+                  <span class="timeline-year-tag">1746 &bull; Ilustración Científica</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  Deduce por primera vez la ecuación diferencial en derivadas parciales que rige la vibración de una cuerda elástica: $\frac{\partial^2 y}{\partial x^2} = \frac{1}{v^2}\frac{\partial^2 y}{\partial t^2}$. Introduce su célebre solución general en forma de ondas viajeras: $y(x,t) = f(x - vt) + g(x + vt)$.
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Nacimiento formal de la física matemática ondulatoria moderna.
+                </div>
+              </div>
+
+              <!-- Hito 4: Euler -->
+              <div class="timeline-card-item" data-era="xvii-xviii">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Leonhard Euler</span>
+                  <span class="timeline-year-tag">1748 &bull; Análisis Infinitesimal</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  Extiende el análisis de d'Alembert a cuerdas elásticas de longitud finita con extremos fijos, formulando la teoría de los modos normales de oscilación y ondas estacionarias mediante series trigonométricas y exponenciales complejas.
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Fundamento matemático de la acústica de instrumentos musicales y resonancias.
+                </div>
+              </div>
+
+              <!-- Hito 5: Young -->
+              <div class="timeline-card-item" data-era="xix">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Thomas Young</span>
+                  <span class="timeline-year-tag">1801 &bull; Óptica Ondulatoria</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  Ejecuta el experimento definitivo de la doble rendija, demostrando que la luz produce franjas de interferencia constructiva y destructiva. Formula de forma explícita el <strong>Principio de Superposición lineal</strong>.
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Quiebre del paradigma corpuscular newtoniano y consolidación del modelo ondulatorio.
+                </div>
+              </div>
+
+              <!-- Hito 6: Fourier -->
+              <div class="timeline-card-item" data-era="xix">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Jean-Baptiste Joseph Fourier</span>
+                  <span class="timeline-year-tag">1822 &bull; Análisis Armónico</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  En su obra maestra <em>Théorie analytique de la chaleur</em>, demuestra que cualquier perfil ondulatorio periódico continuo, por complejo o anguloso que sea, puede descomponerse en una suma (serie) infinita de ondas armónicas sinusoidales simples.
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Columna vertebral del procesamiento digital de señales, telecomunicaciones y síntesis de audio.
+                </div>
+              </div>
+
+              <!-- Hito 7: Maxwell -->
+              <div class="timeline-card-item" data-era="xix">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">James Clerk Maxwell</span>
+                  <span class="timeline-year-tag">1865 &bull; Síntesis Electromagnética</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  Unifica la electricidad, el magnetismo y la óptica en cuatro ecuaciones diferenciales vectoriales. Al combinar la Ley de Faraday y la Ley de Ampère-Maxwell, deduce que los campos $\vec{E}$ y $\vec{B}$ satisfacen la ecuación de onda viajando a $c = 1/\sqrt{\mu_0 \varepsilon_0} \approx 3\times 10^8\text{ m/s}$.
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Predicción teórica de que la luz visible es una onda electromagnética transversal.
+                </div>
+              </div>
+
+              <!-- Hito 8: Hertz -->
+              <div class="timeline-card-item" data-era="xix">
+                <div class="timeline-dot-marker"></div>
+                <div class="timeline-header-row">
+                  <span class="timeline-scientist-name">Heinrich Hertz</span>
+                  <span class="timeline-year-tag">1888 &bull; Validación Experimental</span>
+                </div>
+                <p class="content-p" style="margin-bottom: 6px;">
+                  Construye un oscilador de chispa con circuito LC y un resonador receptor, generando y detectando por primera vez ondas electromagnéticas de radiofrecuencia en el laboratorio. Comprueba que sufren reflexión, refracción, difracción e interferencia a la velocidad $c$.
+                </p>
+                <div class="timeline-impact-box">
+                  <strong>Trascendencia:</strong> Abre la era moderna de las telecomunicaciones, radio, Wi-Fi, radar y telefonía móvil.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 4: MAPA MENTAL INTERACTIVO (CON INSPECTOR EN VIVO)
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-4" data-page-number="4" aria-label="Mapa Mental">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Organizador Gráfico</span>
+              <span class="page-number-badge">Página 4</span>
+            </div>
+
+            <h2 class="page-title">Mapa Mental: Taxonomía del Movimiento Ondulatorio</h2>
+            <p class="page-subtitle">Explora interactivamente los nodos del mapa. Haz clic o pasa el cursor sobre cada nodo para inspeccionar sus fundamentos físicos.</p>
+
+            <div class="mindmap-viewport">
+              <svg viewBox="0 0 860 410" style="width: 100%; height: auto; display: block;" id="mindmap-svg">
+                <!-- Conexiones -->
+                <line x1="430" y1="205" x2="160" y2="80" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="5,5"/>
+                <line x1="430" y1="205" x2="160" y2="330" stroke="#06b6d4" stroke-width="2.5" stroke-dasharray="5,5"/>
+                <line x1="430" y1="205" x2="700" y2="80" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="5,5"/>
+                <line x1="430" y1="205" x2="700" y2="330" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="5,5"/>
+                <line x1="430" y1="205" x2="430" y2="340" stroke="#10b981" stroke-width="2.5" stroke-dasharray="5,5"/>
+
+                <!-- Nodo Central -->
+                <g style="cursor: pointer;" onclick="selectMindmapNode('central')">
+                  <rect x="295" y="170" width="270" height="70" rx="14" fill="#0284c7" stroke="#38bdf8" stroke-width="2.5"/>
+                  <text x="430" y="201" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="700" font-size="15" text-anchor="middle">MOVIMIENTO ONDULATORIO</text>
+                  <text x="430" y="222" fill="#e0f2fe" font-size="11.5" text-anchor="middle">Transporte de Energía y Momento sin Masa</text>
+                </g>
+
+                <!-- Nodo 1: Naturaleza del Medio -->
+                <g style="cursor: pointer;" onclick="selectMindmapNode('medio')">
+                  <rect x="50" y="45" width="220" height="70" rx="10" fill="#0c2548" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="160" y="76" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="700" font-size="13.5" text-anchor="middle">1. Naturaleza del Medio</text>
+                  <text x="160" y="96" fill="#cbd5e1" font-size="11" text-anchor="middle">Mecánicas vs Electromagnéticas</text>
+                </g>
+
+                <!-- Nodo 2: Dirección de Oscilación -->
+                <g style="cursor: pointer;" onclick="selectMindmapNode('direccion')">
+                  <rect x="50" y="295" width="220" height="70" rx="10" fill="#083344" stroke="#06b6d4" stroke-width="2"/>
+                  <text x="160" y="326" fill="#06b6d4" font-family="'Outfit', sans-serif" font-weight="700" font-size="13.5" text-anchor="middle">2. Dirección de Oscilación</text>
+                  <text x="160" y="346" fill="#cbd5e1" font-size="11" text-anchor="middle">Transversales vs Longitudinales</text>
+                </g>
+
+                <!-- Nodo 3: Parámetros Cuantitativos -->
+                <g style="cursor: pointer;" onclick="selectMindmapNode('parametros')">
+                  <rect x="590" y="45" width="220" height="70" rx="10" fill="#2e1065" stroke="#c084fc" stroke-width="2"/>
+                  <text x="700" y="76" fill="#c084fc" font-family="'Outfit', sans-serif" font-weight="700" font-size="13.5" text-anchor="middle">3. Parámetros Cuantitativos</text>
+                  <text x="700" y="96" fill="#cbd5e1" font-size="11" text-anchor="middle">&lambda;, T, f, v = &lambda;f, k, &omega;, A, &phi;</text>
+                </g>
+
+                <!-- Nodo 4: Fenómenos Ondulatorios Colectivos -->
+                <g style="cursor: pointer;" onclick="selectMindmapNode('fenomenos')">
+                  <rect x="590" y="295" width="220" height="70" rx="10" fill="#422006" stroke="#fbbf24" stroke-width="2"/>
+                  <text x="700" y="326" fill="#fde047" font-family="'Outfit', sans-serif" font-weight="700" font-size="13.5" text-anchor="middle">4. Fenómenos Colectivos</text>
+                  <text x="700" y="346" fill="#cbd5e1" font-size="11" text-anchor="middle">Superposición, Interferencia, Estacionarias</text>
+                </g>
+
+                <!-- Nodo 5: Dinámica y Potencia -->
+                <g style="cursor: pointer;" onclick="selectMindmapNode('dinamica')">
+                  <rect x="320" y="305" width="220" height="70" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+                  <text x="430" y="336" fill="#34d399" font-family="'Outfit', sans-serif" font-weight="700" font-size="13.5" text-anchor="middle">5. Dinámica y Potencia</text>
+                  <text x="430" y="356" fill="#cbd5e1" font-size="11" text-anchor="middle">Tensión &tau;, Densidad &mu;, Potencia Media</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Inspector de Conceptos Dinámico (Reactivo a clics, sin alerts) -->
+            <div class="concept-inspector-box" id="concept-inspector">
+              <div class="inspector-title" id="inspector-title">Movimiento Ondulatorio (Concepto Central)</div>
+              <div class="inspector-desc" id="inspector-desc">
+                Una onda es una perturbación auto-propagante que viaja a través del espacio o de un medio material continuo, transportando energía, momento lineal e información de un punto a otro sin que exista un desplazamiento neto permanente de materia.
+              </div>
+              <div class="inspector-meta-row">
+                <div><strong>Ecuación Fundamental:</strong> <span id="inspector-formula" style="color: var(--neon-blue); font-family: var(--font-mono);">v = &lambda; &bull; f = &omega; / k</span></div>
+                <div><strong>Unidad SI de Rapidez:</strong> <span style="color: var(--gold-accent);">metro/segundo (m/s)</span></div>
+                <div><strong>Aplicación en Ingeniería:</strong> <span id="inspector-app" style="color: var(--color-success);">Comunicaciones por fibra óptica, radar, ecografía médica y ensayos no destructivos.</span></div>
+              </div>
+            </div>
+            
+            <div class="figure-caption">
+              <strong>Ilustración 1.</strong> Taxonomía conceptual e interconexiones del movimiento ondulatorio. Haz clic en cualquiera de los nodos para cargar sus fundamentos analíticos.
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 5: FUNDAMENTOS: CONCEPTOS Y DEFINICIONES
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-5" data-page-number="5" aria-label="Fundamentos y Definiciones">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Marco Teórico</span>
+              <span class="page-number-badge">Página 5</span>
+            </div>
+
+            <h2 class="page-title">Fundamentos: Conceptos y Magnitudes</h2>
+            <p class="page-subtitle">Magnitudes escalares, espaciales y temporales del movimiento ondulatorio en el Sistema Internacional (SI).</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+              <div class="editorial-callout" style="margin: 0;">
+                <div class="callout-header">&bull; Longitud de Onda ($\lambda$) y Amplitud ($A$)</div>
+                <p style="font-size: 0.88rem; color: var(--text-secondary);">
+                  <strong>$\lambda$:</strong> Distancia física mínima entre dos puntos sucesivos que se encuentran en el mismo estado de oscilación (fase idéntica). Unidad: metro [m].<br>
+                  <strong>$A$:</strong> Elongación máxima alcanzada por cualquier partícula respecto al punto de equilibrio.
+                </p>
+              </div>
+
+              <div class="editorial-callout" style="margin: 0; border-left-color: var(--neon-cyan);">
+                <div class="callout-header">&bull; Período ($T$) y Frecuencia ($f$)</div>
+                <p style="font-size: 0.88rem; color: var(--text-secondary);">
+                  <strong>$T$:</strong> Tiempo requerido para que un ciclo completo pase por un punto fijo del espacio. Unidad: segundo [s].<br>
+                  <strong>$f$:</strong> Número de ciclos u oscilaciones completas por segundo ($f = 1/T$). Unidad: Hertz [$	ext{Hz} = 	ext{s}^{-1}$].
+                </p>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+              <div class="editorial-callout" style="margin: 0; border-left-color: #a855f7;">
+                <div class="callout-header">&bull; Número de Onda ($k$) y Frecuencia Angular ($\omega$)</div>
+                <p style="font-size: 0.88rem; color: var(--text-secondary);">
+                  <strong>$k$:</strong> Razón de cambio de fase por unidad de distancia espacial ($k = 2\pi/\lambda$). Unidad: [$	ext{rad/m}$].<br>
+                  <strong>$\omega$:</strong> Razón temporal de cambio de fase ($\omega = 2\pi f = 2\pi/T$). Unidad: [$	ext{rad/s}$].
+                </p>
+              </div>
+
+              <div class="editorial-callout" style="margin: 0; border-left-color: var(--gold-accent);">
+                <div class="callout-header">&bull; Rapidez de Propagación de Fase ($v$)</div>
+                <p style="font-size: 0.88rem; color: var(--text-secondary);">
+                  Es la velocidad constante a la cual viaja el perfil de perturbación a través del medio:
+                  $$v = rac{\lambda}{T} = \lambda f = rac{\omega}{k} \quad [	ext{m/s}]$$
+                  Depende exclusivamente de las propiedades elásticas e inerciales del medio transmisor.
+                </p>
+              </div>
+            </div>
+
+            <!-- TABLA 1: RESUMEN DE MAGNITUDES -->
+            <div class="table-wrapper">
+              <table class="styled-table">
+                <thead>
+                  <tr>
+                    <th>Magnitud Física</th>
+                    <th>Símbolo</th>
+                    <th>Unidad SI</th>
+                    <th>Dimensión</th>
+                    <th>Relación Analítica Fundamental</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Amplitud de Onda</strong></td>
+                    <td>$A$</td>
+                    <td>metro ($	ext{m}$)</td>
+                    <td>$[L]$</td>
+                    <td>$A = \max(|y(x,t)|)$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Longitud de Onda</strong></td>
+                    <td>$\lambda$</td>
+                    <td>metro ($	ext{m}$)</td>
+                    <td>$[L]$</td>
+                    <td>$\lambda = v/f = 2\pi/k$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Período</strong></td>
+                    <td>$T$</td>
+                    <td>segundo ($	ext{s}$)</td>
+                    <td>$[T]$</td>
+                    <td>$T = 1/f = 2\pi/\omega$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Frecuencia</strong></td>
+                    <td>$f$</td>
+                    <td>Hertz ($	ext{Hz} = 	ext{s}^{-1}$)</td>
+                    <td>$[T^{-1}]$</td>
+                    <td>$f = 1/T = \omega/(2\pi)$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Frecuencia Angular</strong></td>
+                    <td>$\omega$</td>
+                    <td>radian/segundo ($	ext{rad/s}$)</td>
+                    <td>$[T^{-1}]$</td>
+                    <td>$\omega = 2\pi f = v k$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Número de Onda</strong></td>
+                    <td>$k$</td>
+                    <td>radian/metro ($	ext{rad/m}$)</td>
+                    <td>$[L^{-1}]$</td>
+                    <td>$k = 2\pi/\lambda = \omega/v$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Rapidez de Fase</strong></td>
+                    <td>$v$</td>
+                    <td>metro/segundo ($	ext{m/s}$)</td>
+                    <td>$[L T^{-1}]$</td>
+                    <td>$v = \sqrt{	au/\mu} = \lambda f$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Densidad Lineal</strong></td>
+                    <td>$\mu$</td>
+                    <td>kilogramo/metro ($	ext{kg/m}$)</td>
+                    <td>$[M L^{-1}]$</td>
+                    <td>$\mu = m / L$</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="figure-caption">
+              <strong>Tabla 1.</strong> Resumen sistemático de variables del movimiento ondulatorio continuo bajo el Sistema Internacional de Unidades (SI).
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 6: DEMOSTRACIÓN DE LA ECUACIÓN DIFERENCIAL DE ONDA
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-6" data-page-number="6" aria-label="Demostración Matemática">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Rigor Físico y Matemático</span>
+              <span class="page-number-badge">Página 6</span>
+            </div>
+
+            <h2 class="page-title">Demostración: Ecuación Diferencial de Onda</h2>
+            <p class="page-subtitle">Deducción analítica exacta a partir de la Segunda Ley de Newton en una cuerda elástica tensa.</p>
+
+            <p class="content-p">
+              Consideremos un segmento diferencial de cuerda elástica homogénea de longitud $\Delta x$ y masa $\Delta m = \mu\,\Delta x$, sometida a una tensión horizontal uniforme $	au$, que sufre una pequeña perturbación transversal $y(x, t)$.
+            </p>
+
+            <!-- DIAGRAMA ESQUEMÁTICO DEL ELEMENTO DE CUERDA -->
+            <div style="background: rgba(10, 15, 30, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; margin: 12px 0;">
+              <svg viewBox="0 0 700 160" style="width: 100%; height: auto; display: block;">
+                <!-- Eje horizontal -->
+                <line x1="50" y1="120" x2="650" y2="120" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,4"/>
+                <text x="655" y="124" fill="#94a3b8" font-size="11" font-family="'JetBrains Mono', monospace">x</text>
+
+                <!-- Cuerda curvada -->
+                <path d="M 60,115 Q 350,20 640,105" fill="none" stroke="#38bdf8" stroke-width="3"/>
+
+                <!-- Segmento diferencial Delta x -->
+                <line x1="280" y1="115" x2="280" y2="125" stroke="#94a3b8" stroke-width="1.5"/>
+                <line x1="420" y1="115" x2="420" y2="125" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="280" y="140" fill="#94a3b8" font-size="11" text-anchor="middle">x</text>
+                <text x="420" y="140" fill="#94a3b8" font-size="11" text-anchor="middle">x + &Delta;x</text>
+                <line x1="280" y1="130" x2="420" y2="130" stroke="#38bdf8" stroke-width="1.2"/>
+                <text x="350" y="146" fill="#38bdf8" font-size="10.5" text-anchor="middle">&Delta;x</text>
+
+                <!-- Fuerzas tangenciales Tau -->
+                <!-- Extremo izquierdo -->
+                <line x1="280" y1="65" x2="200" y2="95" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)"/>
+                <text x="180" y="98" fill="#f43f5e" font-weight="700" font-size="12">&tau;&bull;sin(&theta;)</text>
+
+                <!-- Extremo derecho -->
+                <line x1="420" y1="62" x2="505" y2="35" stroke="#10b981" stroke-width="2.5"/>
+                <text x="515" y="38" fill="#10b981" font-weight="700" font-size="12">&tau;&bull;sin(&theta; + &Delta;&theta;)</text>
+
+                <!-- Arco de ángulo theta -->
+                <text x="250" y="75" fill="#fbbf24" font-size="11">&theta;</text>
+                <text x="445" y="55" fill="#fbbf24" font-size="11">&theta; + &Delta;&theta;</text>
+              </svg>
+            </div>
+            <div class="figure-caption">
+              <strong>Figura 1.</strong> Fuerzas tangenciales de tensión actuando sobre los extremos del segmento diferencial de cuerda.
+            </div>
+
+            <h4 style="color: var(--neon-blue); margin-top: 14px;">Paso 1: Balance de Fuerzas Transversales</h4>
+            <p class="content-p">
+              Aplicando la Segunda Ley de Newton en el eje vertical transversal ($\sum F_y = \Delta m \cdot a_y = \Delta m rac{\partial^2 y}{\partial t^2}$):
+            </p>
+            <div class="math-equation-row">
+              <div class="math-equation-content">
+                $$	au \sin(	heta + \Delta	heta) - 	au \sin	heta = \mu\,\Delta x\,rac{\partial^2 y}{\partial t^2}$$
+              </div>
+              <div class="math-equation-num">Ecuación (1)</div>
+            </div>
+
+            <h4 style="color: var(--neon-blue); margin-top: 10px;">Paso 2: Hipótesis de Pequeñas Oscilaciones ($	heta \ll 1$)</h4>
+            <p class="content-p">
+              Para amplitudes moderadas, el ángulo con la horizontal es muy pequeño, cumpliéndose $\sin	heta pprox 	an	heta = rac{\partial y}{\partial x}$. Dividiendo ambos miembros de la ecuación entre $\Delta x$:
+            </p>
+            <div class="math-equation-row">
+              <div class="math-equation-content">
+                $$	au\,rac{\left(rac{\partial y}{\partial x}ight)_{x+\Delta x} - \left(rac{\partial y}{\partial x}ight)_x}{\Delta x} = \mu\,rac{\partial^2 y}{\partial t^2}$$
+              </div>
+              <div class="math-equation-num">Ecuación (2)</div>
+            </div>
+
+            <h4 style="color: var(--neon-blue); margin-top: 10px;">Paso 3: Límite Continuo $(\Delta x 	o 0)$</h4>
+            <p class="content-p">
+              Al tomar el límite cuando $\Delta x 	o 0$, el cociente diferencial corresponde exactamente a la definición rigurosa de la segunda derivada parcial espacial $rac{\partial^2 y}{\partial x^2}$:
+            </p>
+            <div class="math-equation-row">
+              <div class="math-equation-content">
+                $$\lim_{\Delta x 	o 0} rac{\left(rac{\partial y}{\partial x}ight)_{x+\Delta x} - \left(rac{\partial y}{\partial x}ight)_x}{\Delta x} = rac{\partial^2 y}{\partial x^2} \quad \Longrightarrow \quad 	au\,rac{\partial^2 y}{\partial x^2} = \mu\,rac{\partial^2 y}{\partial t^2}$$
+              </div>
+              <div class="math-equation-num">Ecuación (3)</div>
+            </div>
+
+            <h4 style="color: var(--neon-blue); margin-top: 10px;">Paso 4: Rapidez de Propagación y Ecuación de Onda Canónica</h4>
+            <p class="content-p">
+              Reorganizando los coeficientes e introduciendo la velocidad de propagación $v \equiv \sqrt{rac{	au}{\mu}}$, se obtiene la <strong>Ecuación de Onda Unidimensional clásica</strong>:
+            </p>
+            <div class="math-equation-row">
+              <div class="math-equation-content">
+                $$rac{\partial^2 y}{\partial x^2} = rac{1}{v^2}\,rac{\partial^2 y}{\partial t^2}, \qquad v = \sqrt{rac{	au}{\mu}}$$
+              </div>
+              <div class="math-equation-num">Ecuación (4)</div>
+            </div>
+
+            <h4 style="color: var(--neon-blue); margin-top: 10px;">Paso 5: Solución Armónica Viajera</h4>
+            <p class="content-p">
+              La función armónica sinusoidal $y(x,t) = A\sin(kx - \omega t + \phi_0)$ satisface idénticamente la ecuación diferencial siempre que se satisfaga la relación de dispersión $\omega = v k$:
+            </p>
+            <div class="math-equation-row">
+              <div class="math-equation-content">
+                $$rac{\partial^2 y}{\partial x^2} = -k^2 y, \quad rac{\partial^2 y}{\partial t^2} = -\omega^2 y \quad \Longrightarrow \quad -k^2 = -rac{\omega^2}{v^2} \quad \Longleftrightarrow \quad v = rac{\omega}{k}$$
+              </div>
+              <div class="math-equation-num">Ecuación (5)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 7: CINEMÁTICA Y DINÁMICA ONDULATORIA
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-7" data-page-number="7" aria-label="Cinemática y Dinámica">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Cinemática y Energía</span>
+              <span class="page-number-badge">Página 7</span>
+            </div>
+
+            <h2 class="page-title">Cinemática y Dinámica Ondulatoria</h2>
+            <p class="page-subtitle">Distinción física esencial entre la rapidez de la perturbación $v$ y la velocidad transversal $v_y(x,t)$.</p>
+
+            <p class="content-p">
+              En una onda transversal viajera armónica $y(x,t) = A\sin(kx - \omega t + \phi_0)$, los elementos materiales del medio no viajan en la dirección horizontal $+x$, sino que ejecutan un <strong>Movimiento Armónico Simple (MAS)</strong> en el eje transversal $y$:
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+              <div class="editorial-callout" style="margin: 0; border-left-color: var(--color-vel);">
+                <div class="callout-header" style="color: var(--color-vel);">1. Velocidad Transversal $v_y(x, t)$</div>
+                <div style="text-align: center; margin: 8px 0;">
+                  $$v_y = rac{\partial y}{\partial t} = -\omega A\,\cos(kx - \omega t + \phi_0)$$
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                  Valor máximo transversal: $\mathbf{v_{y,\max} = \omega A}$. Ocurre al pasar por la posición de equilibrio ($y = 0$). Relación fundamental: $v_y = -v rac{\partial y}{\partial x}$.
+                </p>
+              </div>
+
+              <div class="editorial-callout" style="margin: 0; border-left-color: var(--color-acc);">
+                <div class="callout-header" style="color: var(--color-acc);">2. Aceleración Transversal $a_y(x, t)$</div>
+                <div style="text-align: center; margin: 8px 0;">
+                  $$a_y = rac{\partial^2 y}{\partial t^2} = -\omega^2 A\,\sin(kx - \omega t + \phi_0) = -\omega^2 y$$
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                  Valor máximo: $\mathbf{a_{y,\max} = \omega^2 A}$. Ocurre en los puntos de máxima elongación o retorno (crestas y valles, $y = \pm A$).
+                </p>
+              </div>
+            </div>
+
+            <h4 style="color: var(--gold-accent); margin-top: 14px;">Flujo de Energía y Potencia Media Transmitida</h4>
+            <p class="content-p">
+              La rapidez instantánea a la que fluye la energía mecánica a través de cualquier punto de la cuerda es el producto de la fuerza vertical por la velocidad transversal: $P(x,t) = -	au rac{\partial y}{\partial x} rac{\partial y}{\partial t} = \mu v \omega^2 A^2 \cos^2(kx - \omega t)$. Al promediar en un ciclo temporal completo ($\langle\cos^2angle = 1/2$):
+            </p>
+            <div class="math-equation-row">
+              <div class="math-equation-content">
+                $$P_{	ext{med}} = rac{1}{2}\,\mu\,v\,\omega^2\,A^2 = 2\pi^2\,\mu\,v\,f^2\,A^2 \quad [	ext{Watts = J/s}]$$
+              </div>
+              <div class="math-equation-num">Ecuación (6)</div>
+            </div>
+
+            <!-- TABLA 2: COMPARACIÓN EXHAUSTIVA -->
+            <div class="table-wrapper">
+              <table class="styled-table">
+                <thead>
+                  <tr>
+                    <th>Aspecto de Análisis Físico</th>
+                    <th>Propagación de la Perturbación (Eje $x$)</th>
+                    <th>Oscilación de las Partículas de la Cuerda (Eje $y$)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Dirección Cinemática</strong></td>
+                    <td>Longitudinal (eje horizontal de propagación $+x$)</td>
+                    <td>Transversal (eje vertical perpendicular $y$)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Rapidez / Velocidad</strong></td>
+                    <td>Constante del medio: $v = \sqrt{	au/\mu} = \lambda f$</td>
+                    <td>Oscilatoria armónica: $v_y = -\omega A \cos(kx - \omega t)$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aceleración</strong></td>
+                    <td>Nula: $a_x = 0$ (frente viaja a rapidez fija)</td>
+                    <td>Variable restauradora: $a_y = -\omega^2 y$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Valores Extremos</strong></td>
+                    <td>Invariable a lo largo de la cuerda homogénea</td>
+                    <td>$v_{y,\max} = \omega A$ en $y=0$; $a_{y,\max} = \omega^2 A$ en $y=\pm A$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Transporte Físico Neto</strong></td>
+                    <td>Transporta energía, momento lineal e información</td>
+                    <td>Cero transporte de materia (las partículas solo vibran)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="figure-caption">
+              <strong>Tabla 2.</strong> Comparación física y matemática entre el desplazamiento de la perturbación y el movimiento armónico local de los elementos del medio.
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 8: PLANO CARTESIANO GEOGEBRA
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-8" data-page-number="8" aria-label="Plano Cartesiano GeoGebra">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Laboratorio Gráfico</span>
+              <span class="page-number-badge">Página 8</span>
+            </div>
+
+            <h2 class="page-title">Plano Cartesiano Interactivo "Estilo GeoGebra"</h2>
+            <p class="page-subtitle">Inspección milimétrica de perfiles de onda, cuadrícula graduada, curvas cinemáticas y coordenadas $(x, y)$ en vivo.</p>
+
+            <div class="geogebra-widget">
+              <div class="geogebra-header">
+                <div class="geogebra-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="m15 9-6 6"></path>
+                    <path d="m9 9 6 6"></path>
+                  </svg>
+                  <span>Lienzo Cartesiano Ondulatorio GeoGebra</span>
+                </div>
+
+                <div class="geogebra-curves-legend">
+                  <div class="legend-item active" id="legend-geo-y" onclick="toggleGeoCurve('y')">
+                    <span class="legend-dot" style="background: var(--color-pos);"></span>
+                    <span>y(x) Elongación</span>
+                  </div>
+                  <div class="legend-item" id="legend-geo-vy" onclick="toggleGeoCurve('vy')">
+                    <span class="legend-dot" style="background: var(--color-vel);"></span>
+                    <span>v_y(x) Vel. Transversal</span>
+                  </div>
+                  <div class="legend-item" id="legend-geo-ay" onclick="toggleGeoCurve('ay')">
+                    <span class="legend-dot" style="background: var(--color-acc);"></span>
+                    <span>a_y(x) Aceleración</span>
+                  </div>
+                  <div class="legend-item active" id="legend-geo-env" onclick="toggleGeoCurve('env')">
+                    <span class="legend-dot" style="background: var(--gold-accent);"></span>
+                    <span>&plusmn;A Cotas</span>
+                  </div>
+                  <div class="legend-item active" id="legend-geo-lambda" onclick="toggleGeoCurve('lambda')">
+                    <span class="legend-dot" style="background: var(--neon-cyan);"></span>
+                    <span>&lambda; Cota</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="geogebra-canvas-container">
+                <canvas id="geogebra-canvas" class="geogebra-canvas"></canvas>
+                <div class="geo-coord-badge" id="geo-coord-badge">Mueve el cursor o toca el plano para inspeccionar</div>
+                
+                <div class="geogebra-toolbar">
+                  <button class="geo-tool-btn" id="geo-btn-zoom-in" title="Acercar (Zoom In)">+</button>
+                  <button class="geo-tool-btn" id="geo-btn-zoom-out" title="Alejar (Zoom Out)">−</button>
+                  <button class="geo-tool-btn" id="geo-btn-reset" title="Restablecer">↺</button>
+                  <button class="geo-tool-btn" id="geo-btn-export" title="Exportar Imagen PNG (Descargar)">📷</button>
+                </div>
+              </div>
+
+              <div class="geogebra-controls-bar">
+                <div class="control-item">
+                  <div class="control-label-wrap">
+                    <span>Amplitud ($A$):</span>
+                    <span class="control-val-tag" id="val-geo-a">2.0 m</span>
+                  </div>
+                  <input type="range" class="slider-custom" id="slider-geo-a" min="0.5" max="4.0" step="0.1" value="2.0">
+                </div>
+
+                <div class="control-item">
+                  <div class="control-label-wrap">
+                    <span>Longitud de Onda ($\lambda$):</span>
+                    <span class="control-val-tag" id="val-geo-lambda">6.0 m</span>
+                  </div>
+                  <input type="range" class="slider-custom" id="slider-geo-lambda" min="2.0" max="15.0" step="0.5" value="6.0">
+                </div>
+
+                <div class="control-item">
+                  <div class="control-label-wrap">
+                    <span>Frecuencia ($f$):</span>
+                    <span class="control-val-tag" id="val-geo-f">0.5 Hz</span>
+                  </div>
+                  <input type="range" class="slider-custom" id="slider-geo-f" min="0.1" max="2.0" step="0.1" value="0.5">
+                </div>
+              </div>
+            </div>
+
+            <div class="figure-caption">
+              <strong>Ilustración 2.</strong> Representación gráfica espacial y cinemática en el plano cartesiano graduado. Permite alternar simultáneamente $y(x)$, $v_y(x)$ y $a_y(x)$.
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 9: ONDALAB PRO (SUPERPOSICIÓN Y PROPAGACIÓN DE ONDAS)
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-9" data-page-number="9" aria-label="Laboratorio OndaLab Pro">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Simulador Dinámico en Vivo</span>
+              <span class="page-number-badge">Página 9</span>
+            </div>
+
+            <h2 class="page-title">Laboratorio OndaLab: Superposición y Propagación</h2>
+            <p class="page-subtitle">Simulador multicanal en tiempo real: ondas viajeras, interferencia constructiva, destructiva, batimientos y resultante $\Sigma Y(x, t)$.</p>
+
+            <div class="ondalab-container">
+              <div class="ondalab-main-view">
+                <!-- Panel Lateral de Ondas -->
+                <div class="ondalab-sidebar">
+                  <div style="font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 8px;">Ondas Componentes y Control</div>
+
+                  <!-- Onda 1 -->
+                  <div class="wave-editor-card">
+                    <div class="wave-editor-card-header">
+                      <div class="wave-pill" style="color: #38bdf8;">
+                        <input type="checkbox" id="w1-visible" checked onchange="renderOndaLab()" style="cursor: pointer;">
+                        <span>y₁(x, t)</span>
+                      </div>
+                      <span style="font-size: 0.75rem; color: #10b981;" id="w1-dir-tag">&rarr; v = +2.0 m/s</span>
+                    </div>
+                    <div class="wave-input-line">
+                      <input type="text" class="wave-input-text" id="w1-expr" value="2 * sin(x - 2 * t)">
+                    </div>
+                  </div>
+
+                  <!-- Onda 2 -->
+                  <div class="wave-editor-card">
+                    <div class="wave-editor-card-header">
+                      <div class="wave-pill" style="color: #f43f5e;">
+                        <input type="checkbox" id="w2-visible" checked onchange="renderOndaLab()" style="cursor: pointer;">
+                        <span>y₂(x, t)</span>
+                      </div>
+                      <span style="font-size: 0.75rem; color: #f43f5e;" id="w2-dir-tag">&larr; v = -2.0 m/s</span>
+                    </div>
+                    <div class="wave-input-line">
+                      <input type="text" class="wave-input-text" id="w2-expr" value="2 * sin(x + 2 * t)">
+                    </div>
+                  </div>
+
+                  <!-- Onda Resultante -->
+                  <div class="wave-editor-card" style="background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4);">
+                    <div class="wave-editor-card-header">
+                      <div class="wave-pill" style="color: #c084fc;">
+                        <input type="checkbox" id="wres-visible" checked onchange="renderOndaLab()" style="cursor: pointer;">
+                        <span style="font-weight: 800; font-size: 0.95rem;">&Sigma;</span>
+                        <span>Resultante Y(x, t)</span>
+                      </div>
+                      <span style="font-size: 0.72rem; color: #c084fc;">Superposición</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono);">Y = y₁(x, t) + y₂(x, t)</div>
+                  </div>
+
+                  <!-- Teclado Científico Virtual -->
+                  <div style="font-size: 0.78rem; font-weight: 700; color: var(--neon-blue); margin-top: 6px;">Teclado Científico:</div>
+                  <div class="keypad-container">
+                    <button class="keypad-btn" onclick="insertKey('sin(')">sin</button>
+                    <button class="keypad-btn" onclick="insertKey('cos(')">cos</button>
+                    <button class="keypad-btn" onclick="insertKey('exp(')">exp</button>
+                    <button class="keypad-btn" onclick="insertKey('x')">x</button>
+                    <button class="keypad-btn" onclick="insertKey('t')">t</button>
+                    <button class="keypad-btn" onclick="insertKey('+')">+</button>
+                    <button class="keypad-btn" onclick="insertKey('-')">−</button>
+                    <button class="keypad-btn" onclick="insertKey('*')">&bull;</button>
+                    <button class="keypad-btn" onclick="insertKey('/')">/</button>
+                    <button class="keypad-btn" onclick="insertKey('^2')">^2</button>
+                  </div>
+
+                  <!-- Presets didácticos -->
+                  <div style="font-size: 0.78rem; font-weight: 700; color: var(--gold-accent); margin-top: 10px;">Fenómenos Físicos (Presets):</div>
+                  <div class="preset-chip-list">
+                    <button class="preset-chip" onclick="setOndaLabPreset('estacionaria')">Onda Estacionaria</button>
+                    <button class="preset-chip" onclick="setOndaLabPreset('constructiva')">Int. Constructiva</button>
+                    <button class="preset-chip" onclick="setOndaLabPreset('destructiva')">Int. Destructiva</button>
+                    <button class="preset-chip" onclick="setOndaLabPreset('batimiento')">Batimiento</button>
+                    <button class="preset-chip" onclick="setOndaLabPreset('paquete')">Paquete Gaussiano</button>
+                  </div>
+                </div>
+
+                <!-- Lienzo de Animación -->
+                <div class="ondalab-canvas-wrap">
+                  <canvas id="ondalab-canvas" class="ondalab-canvas"></canvas>
+                </div>
+              </div>
+
+              <!-- Barra Inferior de Reproducción -->
+              <div class="ondalab-bottom-bar">
+                <button class="btn-nav btn-nav-primary" id="btn-onda-play" style="padding: 6px 14px;">
+                  <span id="play-icon-text">⏸ Pausar</span>
+                </button>
+                <button class="btn-nav" id="btn-onda-step" style="padding: 6px 10px;" title="Paso a paso (+0.05s)">+0.05s</button>
+                <button class="btn-nav" id="btn-onda-reset" style="padding: 6px 12px;">↺ t = 0</button>
+                <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--neon-blue);" id="onda-time-tag">t = 0.00 s</span>
+                
+                <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 0.78rem; color: var(--text-muted);">Velocidad:</span>
+                  <select id="onda-speed-select" style="background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--border-subtle); border-radius: 4px; padding: 4px 8px; font-size: 0.8rem;">
+                    <option value="0.25">0.25&times;</option>
+                    <option value="0.5">0.5&times;</option>
+                    <option value="1.0" selected>1.0&times;</option>
+                    <option value="2.0">2.0&times;</option>
+                  </select>
+                  <button class="btn-nav" onclick="openSimModal()" style="padding: 6px 10px;" title="Proyección en Pantalla Completa">&#x26F6; Modal</button>
+                  <button class="btn-nav" onclick="exportOndaLabPNG()" style="padding: 6px 10px;" title="Descargar captura PNG">📷 PNG</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="figure-caption">
+              <strong>Ilustración 3.</strong> Laboratorio virtual interactivo de propagación y principio de superposición lineal con resultante continua calculada en tiempo real.
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 10: TALLER DE PROBLEMAS RESUELTOS CON PROTOCOLO CROMÁTICO
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-10" data-page-number="10" aria-label="Taller de Ejercicios">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Didáctica STEM Rigurosa</span>
+              <span class="page-number-badge">Página 10</span>
+            </div>
+
+            <h2 class="page-title">Taller de Problemas Resueltos (5 Pasos)</h2>
+            <p class="page-subtitle">Aplicación estricta del protocolo de 5 pasos con codificación cromática: Azul, Rojo, Dorado, Naranja y Verde.</p>
+
+            <!-- EJERCICIO 1 -->
+            <div class="exercise-container">
+              <div class="exercise-title">Ejercicio Modelo 1: Onda en Cuerda de Guitarra Clásica</div>
+              <div class="exercise-statement">
+                <strong>Enunciado:</strong> Una cuerda de guitarra homogénea de longitud $L = 0.65	ext{ m}$ y masa total $m = 3.25	ext{ g}$ se encuentra tensada con una fuerza de $	au = 130	ext{ N}$. Se genera una onda sinusoidal viajera con frecuencia $f = 220	ext{ Hz}$ (nota La₃) y amplitud $A = 3.5	ext{ mm}$.
+                <br>Calcule la rapidez de propagación $v$, la longitud de onda $\lambda$, el número de onda $k$, la velocidad transversal máxima $v_{y,\max}$ y la potencia media $P_{	ext{med}}$ transmitida.
+              </div>
+
+              <!-- PASO 1: DATOS (AZUL) -->
+              <div class="protocol-step step-data">
+                <div class="step-label">Paso 1: Identificación de Datos (En Color Azul)</div>
+                <div class="badge-list">
+                  <span class="badge-item badge-data">Tensión: &tau; = 130 N</span>
+                  <span class="badge-item badge-data">Longitud: L = 0.65 m</span>
+                  <span class="badge-item badge-data">Masa: m = 0.00325 kg (3.25 g)</span>
+                  <span class="badge-item badge-data">Frecuencia: f = 220 Hz</span>
+                  <span class="badge-item badge-data">Amplitud: A = 0.0035 m (3.5 mm)</span>
+                </div>
+              </div>
+
+              <!-- PASO 2: INCÓGNITAS (ROJO) -->
+              <div class="protocol-step step-unknowns">
+                <div class="step-label">Paso 2: Identificación de Incógnitas (En Color Rojo)</div>
+                <div class="badge-list">
+                  <span class="badge-item badge-unknown">Densidad lineal: &mu; = ? [kg/m]</span>
+                  <span class="badge-item badge-unknown">Rapidez de onda: v = ? [m/s]</span>
+                  <span class="badge-item badge-unknown">Longitud de onda: &lambda; = ? [m]</span>
+                  <span class="badge-item badge-unknown">Número de onda: k = ? [rad/m]</span>
+                  <span class="badge-item badge-unknown">Vel. transversal máx: v_y,max = ? [m/s]</span>
+                  <span class="badge-item badge-unknown">Potencia media: P_med = ? [W]</span>
+                </div>
+              </div>
+
+              <!-- PASO 3: FÓRMULAS NECESARIAS (DORADO) -->
+              <div class="protocol-step step-formulas">
+                <div class="step-label">Paso 3: Fórmulas Matemáticas y Físicas Necesarias</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 0.95rem;">
+                  <div>$$\mu = rac{m}{L}$$</div>
+                  <div>$$v = \sqrt{rac{	au}{\mu}}$$</div>
+                  <div>$$\lambda = rac{v}{f}$$</div>
+                  <div>$$k = rac{2\pi}{\lambda}$$</div>
+                  <div>$$v_{y,\max} = 2\pi f A$$</div>
+                  <div>$$P_{	ext{med}} = rac{1}{2}\mu v \omega^2 A^2$$</div>
+                </div>
+              </div>
+
+              <!-- PASO 4: SUSTITUCIÓN Y RESULTADOS (NARANJA) -->
+              <div class="protocol-step step-resolution">
+                <div class="step-label">Paso 4: Sustitución y Resultados (En Color Naranja - Resueltos)</div>
+                <div style="font-size: 0.9rem; line-height: 1.8;">
+                  <p>1. Densidad lineal: $\mu = rac{0.00325	ext{ kg}}{0.65	ext{ m}} = \mathbf{0.0050	ext{ kg/m}}$ ($5.0	ext{ g/m}$).</p>
+                  <p>2. Rapidez de propagación: $v = \sqrt{rac{130	ext{ N}}{0.0050	ext{ kg/m}}} = \sqrt{26000} pprox \mathbf{161.25	ext{ m/s}}$.</p>
+                  <p>3. Longitud de onda: $\lambda = rac{161.25	ext{ m/s}}{220	ext{ Hz}} pprox \mathbf{0.733	ext{ m}}$ ($73.3	ext{ cm}$).</p>
+                  <p>4. Número de onda: $k = rac{2\pi}{0.733} pprox \mathbf{8.57	ext{ rad/m}}$.</p>
+                  <p>5. Rapidez transversal máxima: $v_{y,\max} = (2\pi 	imes 220)(0.0035) pprox \mathbf{4.838	ext{ m/s}}$.</p>
+                  <p>6. Potencia media: $P_{	ext{med}} = rac{1}{2}(0.0050)(161.25)(2\pi 	imes 220)^2 (0.0035)^2 pprox \mathbf{9.44	ext{ W}}$.</p>
+                </div>
+
+                <div class="badge-list" style="margin-top: 10px;" id="ex1-results-badges">
+                  <span class="badge-item badge-solved">&mu; = 0.0050 kg/m</span>
+                  <span class="badge-item badge-solved">v = 161.25 m/s</span>
+                  <span class="badge-item badge-solved">&lambda; = 0.733 m</span>
+                  <span class="badge-item badge-solved">k = 8.57 rad/m</span>
+                  <span class="badge-item badge-solved">v_y,max = 4.838 m/s</span>
+                  <span class="badge-item badge-solved">P_med = 9.44 W</span>
+                </div>
+              </div>
+
+              <!-- PASO 5: VALIDACIÓN Y CONCLUSIONES -->
+              <div class="protocol-step step-validation">
+                <div class="step-label">Paso 5: Validación Dimensional y Conclusiones Físicas (En Color Verde)</div>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                  <strong>Consistencia Dimensional:</strong> $\sqrt{rac{	ext{N}}{	ext{kg/m}}} = \sqrt{rac{	ext{kg}\cdot	ext{m/s}^2}{	ext{kg/m}}} = \sqrt{	ext{m}^2/	ext{s}^2} = 	ext{m/s}$, corroborando la unidad de velocidad.
+                  <br><strong>Conclusión:</strong> La velocidad de onda ($161.25	ext{ m/s}$) es un orden de magnitud mayor que la velocidad transversal máxima de las partículas ($4.84	ext{ m/s}$), confirmando la validez de la aproximación de ángulos pequeños ($	heta \ll 1$).
+                </p>
+              </div>
+
+              <!-- CALCULADORA REACTIVA EN TIEMPO REAL -->
+              <div class="exercise-calc-box">
+                <div class="calc-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>
+                  <span>Calculadora Dinámica: Modifica los parámetros y observa el recálculo instantáneo</span>
+                </div>
+                <div class="calc-inputs-row">
+                  <div class="calc-input-group">
+                    <label>Tensión &tau; [N]:</label>
+                    <input type="number" id="calc-tau" value="130" step="5" min="10" max="1000" oninput="recalcExercise1()">
+                  </div>
+                  <div class="calc-input-group">
+                    <label>Longitud L [m]:</label>
+                    <input type="number" id="calc-l" value="0.65" step="0.05" min="0.1" max="5" oninput="recalcExercise1()">
+                  </div>
+                  <div class="calc-input-group">
+                    <label>Masa m [g]:</label>
+                    <input type="number" id="calc-m" value="3.25" step="0.25" min="0.5" max="50" oninput="recalcExercise1()">
+                  </div>
+                  <div class="calc-input-group">
+                    <label>Frecuencia f [Hz]:</label>
+                    <input type="number" id="calc-f" value="220" step="10" min="10" max="2000" oninput="recalcExercise1()">
+                  </div>
+                  <div class="calc-input-group">
+                    <label>Amplitud A [mm]:</label>
+                    <input type="number" id="calc-a" value="3.5" step="0.5" min="0.5" max="50" oninput="recalcExercise1()">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- EJERCICIO 2 -->
+            <div class="exercise-container">
+              <div class="exercise-title">Ejercicio Modelo 2: Cable de Acero de Transmisión de Alta Potencia</div>
+              <div class="exercise-statement">
+                <strong>Enunciado:</strong> Un cable de acero de suspensión de longitud $L = 80.0	ext{ m}$ y masa total $m = 120.0	ext{ kg}$ se encuentra sometido a una tensión de $	au = 18000	ext{ N}$. Un actuador mecánico en un extremo induce una perturbación armónica continua con frecuencia $f = 12.0	ext{ Hz}$ y amplitud $A = 4.0	ext{ cm}$.
+                <br>Determine: a) la densidad lineal $\mu$, b) la rapidez de propagación $v$, c) el tiempo de tránsito de un pulso de extremo a extremo, d) la longitud de onda $\lambda$, y e) la potencia media transmitida en kilowatts [kW].
+              </div>
+
+              <!-- PASO 1 Y 2 -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div class="protocol-step step-data" style="margin: 0;">
+                  <div class="step-label">Paso 1: Datos (Azul)</div>
+                  <div class="badge-list">
+                    <span class="badge-item badge-data">&tau; = 18000 N</span>
+                    <span class="badge-item badge-data">L = 80.0 m</span>
+                    <span class="badge-item badge-data">m = 120.0 kg</span>
+                    <span class="badge-item badge-data">f = 12.0 Hz</span>
+                    <span class="badge-item badge-data">A = 0.040 m (4 cm)</span>
+                  </div>
+                </div>
+
+                <div class="protocol-step step-unknowns" style="margin: 0;">
+                  <div class="step-label">Paso 2: Incógnitas (Rojo)</div>
+                  <div class="badge-list">
+                    <span class="badge-item badge-unknown">&mu; = ? [kg/m]</span>
+                    <span class="badge-item badge-unknown">v = ? [m/s]</span>
+                    <span class="badge-item badge-unknown">t_transito = ? [s]</span>
+                    <span class="badge-item badge-unknown">&lambda; = ? [m]</span>
+                    <span class="badge-item badge-unknown">P_med = ? [kW]</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PASO 4: RESULTADOS RESUELTOS (NARANJA) -->
+              <div class="protocol-step step-resolution">
+                <div class="step-label">Paso 4: Sustitución y Resultados Resueltos (Naranja)</div>
+                <div style="font-size: 0.9rem; line-height: 1.8;">
+                  <p>1. Densidad lineal: $\mu = rac{120.0	ext{ kg}}{80.0	ext{ m}} = \mathbf{1.50	ext{ kg/m}}$.</p>
+                  <p>2. Rapidez de propagación: $v = \sqrt{rac{18000	ext{ N}}{1.50	ext{ kg/m}}} = \sqrt{12000} pprox \mathbf{109.54	ext{ m/s}}$.</p>
+                  <p>3. Tiempo de tránsito: $t = rac{L}{v} = rac{80.0	ext{ m}}{109.54	ext{ m/s}} pprox \mathbf{0.730	ext{ s}}$.</p>
+                  <p>4. Longitud de onda: $\lambda = rac{109.54	ext{ m/s}}{12.0	ext{ Hz}} pprox \mathbf{9.13	ext{ m}}$.</p>
+                  <p>5. Frecuencia angular: $\omega = 2\pi(12.0) pprox 75.40	ext{ rad/s}$.</p>
+                  <p>6. Potencia media: $P_{	ext{med}} = rac{1}{2}(1.50)(109.54)(75.40)^2 (0.040)^2 pprox \mathbf{746.2	ext{ W}} = \mathbf{0.746	ext{ kW}}$.</p>
+                </div>
+                <div class="badge-list" style="margin-top: 10px;">
+                  <span class="badge-item badge-solved">&mu; = 1.50 kg/m</span>
+                  <span class="badge-item badge-solved">v = 109.54 m/s</span>
+                  <span class="badge-item badge-solved">t = 0.730 s</span>
+                  <span class="badge-item badge-solved">&lambda; = 9.13 m</span>
+                  <span class="badge-item badge-solved">P_med = 0.746 kW</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- EJERCICIO 3 -->
+            <div class="exercise-container">
+              <div class="exercise-title">Ejercicio Modelo 3: Ondas Estacionarias y Resonancia Armónica</div>
+              <div class="exercise-statement">
+                <strong>Enunciado:</strong> Una cuerda de piano de longitud $L = 1.20	ext{ m}$ fija rígidamente en ambos extremos tiene una velocidad de onda transversal de $v = 240	ext{ m/s}$.
+                <br>a) Determine la frecuencia fundamental $f_1$ y las frecuencias de los primeros 4 armónicos ($f_2, f_3, f_4$).
+                <br>b) Para el tercer armónico ($n = 3$), halle la longitud de onda $\lambda_3$ y las posiciones espaciales $x$ exactas de todos los nodos y vientres (antinodos) a lo largo de la cuerda.
+              </div>
+
+              <div class="protocol-step step-resolution">
+                <div class="step-label">Paso 4: Resolución Analítica y Cuantitativa</div>
+                <div style="font-size: 0.9rem; line-height: 1.8;">
+                  <p>1. Condición de extremos fijos: $\lambda_n = rac{2L}{n} \implies f_n = n rac{v}{2L} = n \cdot f_1$.</p>
+                  <p>2. Frecuencia fundamental ($n=1$): $f_1 = rac{240	ext{ m/s}}{2(1.20	ext{ m})} = \mathbf{100.0	ext{ Hz}}$.</p>
+                  <p>3. Serie armónica: $f_2 = 200.0	ext{ Hz}, \quad f_3 = 300.0	ext{ Hz}, \quad f_4 = 400.0	ext{ Hz}$.</p>
+                  <p>4. Longitud de onda del 3.er armónico ($n=3$): $\lambda_3 = rac{2(1.20)}{3} = \mathbf{0.80	ext{ m}}$ ($80	ext{ cm}$).</p>
+                  <p>5. <strong>Posición de los 4 Nodos ($y=0$):</strong> $x = m rac{\lambda_3}{2} \implies \mathbf{x_0 = 0.0	ext{ m}, \ x_1 = 0.40	ext{ m}, \ x_2 = 0.80	ext{ m}, \ x_3 = 1.20	ext{ m}}$.</p>
+                  <p>6. <strong>Posición de los 3 Vientres ($y=\pm 2A$):</strong> $x = \left(m + rac{1}{2}ight)rac{\lambda_3}{2} \implies \mathbf{x'_1 = 0.20	ext{ m}, \ x'_2 = 0.60	ext{ m}, \ x'_3 = 1.00	ext{ m}}$.</p>
+                </div>
+                <div class="badge-list" style="margin-top: 10px;">
+                  <span class="badge-item badge-solved">f₁ = 100 Hz</span>
+                  <span class="badge-item badge-solved">f₂ = 200 Hz</span>
+                  <span class="badge-item badge-solved">f₃ = 300 Hz</span>
+                  <span class="badge-item badge-solved">f₄ = 400 Hz</span>
+                  <span class="badge-item badge-solved">&lambda;₃ = 0.80 m</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- QUIZ FORMATIVO DE AUTOEVALUACIÓN -->
+            <div class="quiz-block">
+              <div class="exercise-title" style="color: var(--gold-accent);">
+                <span>📝 Quiz Formativo de Autoevaluación Conceptual</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px;">
+                Selecciona la respuesta correcta para cada una de las 5 preguntas y haz clic en "Comprobar Respuestas" para verificar tu dominio conceptual.
+              </p>
+
+              <!-- Pregunta 1 -->
+              <div class="quiz-question-card" data-correct="b">
+                <div class="quiz-q-title">1. Si la tensión $	au$ de una cuerda elástica se cuadruplica manteniendo constante su masa y longitud, la rapidez de propagación de la onda:</div>
+                <div class="quiz-options">
+                  <label class="quiz-option-label"><input type="radio" name="q1" value="a"> a) Se cuadruplica ($4v$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q1" value="b"> b) Se duplica ($2v$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q1" value="c"> c) Permanece inalterada</label>
+                  <label class="quiz-option-label"><input type="radio" name="q1" value="d"> d) Se reduce a la mitad ($v/2$)</label>
+                </div>
+                <div class="quiz-feedback" id="fb-q1"></div>
+              </div>
+
+              <!-- Pregunta 2 -->
+              <div class="quiz-question-card" data-correct="c">
+                <div class="quiz-q-title">2. En una onda transversal armónica, la rapidez transversal $v_y$ de un elemento de la cuerda alcanza su valor máximo cuando:</div>
+                <div class="quiz-options">
+                  <label class="quiz-option-label"><input type="radio" name="q2" value="a"> a) Se encuentra en la cresta ($y = +A$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q2" value="b"> b) Se encuentra en el valle ($y = -A$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q2" value="c"> c) Pasa por la posición de equilibrio ($y = 0$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q2" value="d"> d) Su aceleración transversal es máxima</label>
+                </div>
+                <div class="quiz-feedback" id="fb-q2"></div>
+              </div>
+
+              <!-- Pregunta 3 -->
+              <div class="quiz-question-card" data-correct="a">
+                <div class="quiz-q-title">3. Cuando dos ondas armónicas idénticas interfieren con una diferencia de fase de $\Delta\phi = \pi	ext{ rad}$ ($180^\circ$), el fenómeno resultante es:</div>
+                <div class="quiz-options">
+                  <label class="quiz-option-label"><input type="radio" name="q3" value="a"> a) Interferencia destructiva total (amplitud resultante nula)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q3" value="b"> b) Interferencia constructiva máxima (amplitud $2A$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q3" value="c"> c) Batimiento con frecuencia de modulación</label>
+                  <label class="quiz-option-label"><input type="radio" name="q3" value="d"> d) Dispersión cromática</label>
+                </div>
+                <div class="quiz-feedback" id="fb-q3"></div>
+              </div>
+
+              <!-- Pregunta 4 -->
+              <div class="quiz-question-card" data-correct="d">
+                <div class="quiz-q-title">4. Si se duplica la amplitud $A$ de una onda armónica ($2A$), la potencia media transmitida $P_{	ext{med}}$:</div>
+                <div class="quiz-options">
+                  <label class="quiz-option-label"><input type="radio" name="q4" value="a"> a) Se reduce a la mitad</label>
+                  <label class="quiz-option-label"><input type="radio" name="q4" value="b"> b) Se mantiene constante</label>
+                  <label class="quiz-option-label"><input type="radio" name="q4" value="c"> c) Se duplica ($2P$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q4" value="d"> d) Se cuadruplica ($4P$, ya que $P \propto A^2$)</label>
+                </div>
+                <div class="quiz-feedback" id="fb-q4"></div>
+              </div>
+
+              <!-- Pregunta 5 -->
+              <div class="quiz-question-card" data-correct="b">
+                <div class="quiz-q-title">5. En un patrón de onda estacionaria, la separación espacial entre dos nodos consecutivos adyacentes es igual a:</div>
+                <div class="quiz-options">
+                  <label class="quiz-option-label"><input type="radio" name="q5" value="a"> a) Una longitud de onda completa ($\lambda$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q5" value="b"> b) Media longitud de onda ($\lambda / 2$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q5" value="c"> c) Un cuarto de longitud de onda ($\lambda / 4$)</label>
+                  <label class="quiz-option-label"><input type="radio" name="q5" value="d"> d) Dos longitudes de onda ($2\lambda$)</label>
+                </div>
+                <div class="quiz-feedback" id="fb-q5"></div>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px;">
+                <button class="btn-nav btn-nav-primary" onclick="gradeQuiz()">Calificar Quiz</button>
+                <span id="quiz-score-tag" style="font-family: var(--font-mono); font-weight: 700; color: var(--gold-accent);"></span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 11: GLOSARIO CIENTÍFICO ILUSTRADO
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-11" data-page-number="11" aria-label="Glosario Científico">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Vocabulario Especializado</span>
+              <span class="page-number-badge">Página 11</span>
+            </div>
+
+            <h2 class="page-title">Glosario de Términos Científicos</h2>
+            <p class="page-subtitle">24 definiciones rigurosas de física ondulatoria con buscador reactivo y filtros alfabéticos.</p>
+
+            <div class="glossary-filters">
+              <button class="glossary-filter-chip active" onclick="filterGlossaryLetter('all')">Todos (24)</button>
+              <button class="glossary-filter-chip" onclick="filterGlossaryLetter('A-C')">A – C</button>
+              <button class="glossary-filter-chip" onclick="filterGlossaryLetter('D-F')">D – F</button>
+              <button class="glossary-filter-chip" onclick="filterGlossaryLetter('G-M')">G – M</button>
+              <button class="glossary-filter-chip" onclick="filterGlossaryLetter('N-P')">N – P</button>
+              <button class="glossary-filter-chip" onclick="filterGlossaryLetter('R-Z')">R – Z</button>
+            </div>
+
+            <div class="glossary-search-bar">
+              <input type="text" id="glossary-search" class="glossary-input" placeholder="Buscar concepto (ej: Amplitud, Frecuencia, Interferencia, Nodo, Vientre, Dispersión)..." oninput="filterGlossary()">
+            </div>
+
+            <div class="glossary-grid" id="glossary-grid">
+              <div class="glossary-card" data-letter="A">
+                <div class="glossary-term">Amplitud ($A$)</div>
+                <div class="glossary-def">Desplazamiento máximo de una partícula del medio respecto a su posición de equilibrio. Se mide en metros [m] en el SI.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="A">
+                <div class="glossary-term">Antinodo (Vientre)</div>
+                <div class="glossary-def">Punto en una onda estacionaria donde la interferencia constructiva produce la máxima amplitud de oscilación posible ($2A$).</div>
+              </div>
+
+              <div class="glossary-card" data-letter="B">
+                <div class="glossary-term">Batimiento</div>
+                <div class="glossary-def">Pulsación periódica en la intensidad sonora o amplitud resultante producida por la superposición de dos ondas de frecuencias ligeramente diferentes.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="C">
+                <div class="glossary-term">Cresta y Valle</div>
+                <div class="glossary-def">Puntos de elongación extrema positiva ($+A$) y negativa ($-A$) en el perfil espacial de una onda transversal.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="D">
+                <div class="glossary-term">Difracción</div>
+                <div class="glossary-def">Propiedad de las ondas de arquearse y bordear obstáculos o aberturas cuyas dimensiones son del orden de su longitud de onda $\lambda$.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="D">
+                <div class="glossary-term">Dispersión</div>
+                <div class="glossary-def">Fenómeno por el cual la velocidad de fase $v$ de una onda depende de su frecuencia o longitud de onda, deformando paquetes de ondas.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="E">
+                <div class="glossary-term">Ecuación Diferencial de Onda</div>
+                <div class="glossary-def">Ecuación diferencial en derivadas parciales hiperbólica lineal $
+abla^2 y = rac{1}{v^2}rac{\partial^2 y}{\partial t^2}$ que gobierna las perturbaciones ondulatorias.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="E">
+                <div class="glossary-term">Efecto Doppler</div>
+                <div class="glossary-def">Cambio aparente en la frecuencia percibida de una onda cuando el emisor y el observador se encuentran en movimiento relativo entre sí.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="E">
+                <div class="glossary-term">Elongación ($y$)</div>
+                <div class="glossary-def">Distancia instantánea y orientada (positiva o negativa) que separa a una partícula de su posición de equilibrio en un tiempo $t$.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="F">
+                <div class="glossary-term">Fase Inicial ($\phi_0$)</div>
+                <div class="glossary-def">Constante angular en radianes que determina el estado de movimiento o elongación de la onda en el origen espacial y temporal $(x=0, t=0)$.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="F">
+                <div class="glossary-term">Frente de Onda</div>
+                <div class="glossary-def">Superficie continua geométrica formada por todos los puntos del medio que oscilan exactamente con la misma fase instantánea.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="F">
+                <div class="glossary-term">Frecuencia ($f$)</div>
+                <div class="glossary-def">Número de ciclos u oscilaciones completas por unidad de tiempo. Se mide en Hertz [$	ext{Hz} = 	ext{s}^{-1}$].</div>
+              </div>
+
+              <div class="glossary-card" data-letter="F">
+                <div class="glossary-term">Frecuencia Angular ($\omega$)</div>
+                <div class="glossary-def">Razón temporal de cambio de la fase angular ($\omega = 2\pi f = 2\pi/T$), medida en radianes por segundo [$	ext{rad/s}$].</div>
+              </div>
+
+              <div class="glossary-card" data-letter="I">
+                <div class="glossary-term">Impedancia Característica ($Z$)</div>
+                <div class="glossary-def">Oposición que ofrece un medio a la propagación ondulatoria ($Z = \sqrt{\mu	au} = \mu v$ en cuerdas), determinante en reflexiones.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="I">
+                <div class="glossary-term">Interferencia Constructiva</div>
+                <div class="glossary-def">Superposición de ondas cuyas crestas coinciden en fase ($\Delta\phi = 2m\pi$), produciendo un reforzamiento de amplitud máxima.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="I">
+                <div class="glossary-term">Interferencia Destructiva</div>
+                <div class="glossary-def">Superposición de ondas en contrafase ($\Delta\phi = (2m+1)\pi$), cancelándose mutua y temporalmente sus elongaciones.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="L">
+                <div class="glossary-term">Longitud de Onda ($\lambda$)</div>
+                <div class="glossary-def">Distancia espacial mínima entre dos puntos sucesivos que se encuentran en el mismo estado de oscilación. Unidad SI: metro [m].</div>
+              </div>
+
+              <div class="glossary-card" data-letter="M">
+                <div class="glossary-term">Modo Normal de Vibración</div>
+                <div class="glossary-def">Patrón de movimiento armónico estacionario en el que todas las partes de un sistema oscilan a la misma frecuencia característica con desfase fijo.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="N">
+                <div class="glossary-term">Nodo</div>
+                <div class="glossary-def">Punto en una onda estacionaria donde la interferencia destructiva es permanente y la elongación es estrictamente nula ($y = 0$).</div>
+              </div>
+
+              <div class="glossary-card" data-letter="N">
+                <div class="glossary-term">Número de Onda ($k$)</div>
+                <div class="glossary-def">Densidad espacial de ciclos por cada $2\pi$ radianes ($k = 2\pi/\lambda$), medida en radianes por metro [$	ext{rad/m}$].</div>
+              </div>
+
+              <div class="glossary-card" data-letter="O">
+                <div class="glossary-term">Onda Estacionaria</div>
+                <div class="glossary-def">Patrón oscilatorio espacialmente fijo resultante de la superposición de dos ondas viajeras de idéntica frecuencia y amplitud en sentidos opuestos.</div>
+              </div>
+
+              <div class="glossary-card" data-letter="O">
+                <div class="glossary-term">Onda Longitudinal</div>
+                <div class="glossary-def">Onda en la cual las partículas del medio oscilan en una dirección estrictamente paralela a la dirección de propagación (ej: sonido en gases).</div>
+              </div>
+
+              <div class="glossary-card" data-letter="O">
+                <div class="glossary-term">Onda Transversal</div>
+                <div class="glossary-def">Onda en la que la perturbación oscila en una dirección perpendicular a la línea de propagación (ej: ondas en cuerdas, luz).</div>
+              </div>
+
+              <div class="glossary-card" data-letter="P">
+                <div class="glossary-term">Potencia Media ($P_{	ext{med}}$)</div>
+                <div class="glossary-def">Tasa neta a la cual la onda transfiere energía mecánica a través de una sección del medio ($P_{	ext{med}} = rac{1}{2}\mu v \omega^2 A^2$) en Watts [W].</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             PÁGINA 12: REFERENCIAS BIBLIOGRÁFICAS (NORMAS APA 7)
+             ==================================================================== -->
+        <section class="notebook-page page-content-template" id="page-12" data-page-number="12" aria-label="Referencias Bibliográficas">
+          <div class="page-inner-content">
+            <div class="page-header-strip">
+              <span class="page-category-tag">Fuentes Académicas</span>
+              <span class="page-number-badge">Página 12</span>
+            </div>
+
+            <h2 class="page-title">Referencias Bibliográficas (Normas APA 7)</h2>
+            <p class="page-subtitle">Textos guía universitarios de referencia cotejados bajo los estándares del Sistema Internacional (SI) y normas APA 7.ª edición con sangría francesa.</p>
+
+            <div class="apa-card">
+              Serway, R. A., &amp; Jewett, J. W. (2018). <em>Física para ciencias e ingeniería</em> (10.ª ed., Vol. 1). Cengage Learning.
+              <div class="apa-badge-row">
+                <span class="apa-badge">Capítulo 16: Movimiento Ondulatorio</span>
+                <span class="apa-badge">Capítulo 18: Superposición y Ondas Estacionarias</span>
+                <span class="apa-badge">ISBN: 978-607-526-671-8</span>
+              </div>
+            </div>
+
+            <div class="apa-card">
+              Halliday, D., Resnick, R., &amp; Walker, J. (2014). <em>Fundamentals of physics</em> (10th ed.). John Wiley &amp; Sons.
+              <div class="apa-badge-row">
+                <span class="apa-badge">Chapter 16: Waves—I (Transverse Waves &amp; Wave Speed)</span>
+                <span class="apa-badge">Chapter 17: Waves—II (Interference &amp; Standing Waves)</span>
+                <span class="apa-badge">ISBN: 978-111-823-071-8</span>
+              </div>
+            </div>
+
+            <div class="apa-card">
+              Sears, F. W., Zemansky, M. W., Young, H. D., &amp; Freedman, R. A. (2016). <em>Física universitaria con física moderna</em> (14.ª ed., Vol. 1). Pearson Educación.
+              <div class="apa-badge-row">
+                <span class="apa-badge">Capítulo 15: Ondas Mecánicas y Transporte de Energía</span>
+                <span class="apa-badge">Capítulo 16: Sonido, Interferencia y Modos Normales</span>
+                <span class="apa-badge">ISBN: 978-607-32-3760-4</span>
+              </div>
+            </div>
+
+            <div class="apa-card">
+              Tipler, P. A., &amp; Mosca, G. (2010). <em>Física para la ciencia y la tecnología: Mecánica, oscilaciones y ondas, termodinámica</em> (6.ª ed., Vol. 1). Editorial Reverté.
+              <div class="apa-badge-row">
+                <span class="apa-badge">Capítulo 15: Movimiento Ondulatorio y Ondas Estacionarias</span>
+                <span class="apa-badge">ISBN: 978-84-291-4429-1</span>
+              </div>
+            </div>
+
+            <div class="apa-card">
+              French, A. P. (1971). <em>Vibrations and waves</em> (M.I.T. Introductory Physics Series). W. W. Norton &amp; Company.
+              <div class="apa-badge-row">
+                <span class="apa-badge">Chapter 7: Continuous Systems and Boundary Conditions</span>
+                <span class="apa-badge">Chapter 8: Fourier Analysis &amp; Wave Packets</span>
+              </div>
+            </div>
+
+            <div class="apa-card">
+              Crawford, F. S. (1968). <em>Waves</em> (Berkeley Physics Course, Vol. 3). McGraw-Hill Education.
+              <div class="apa-badge-row">
+                <span class="apa-badge">Chapter 2: Free Oscillations of Systems with Many Degrees of Freedom</span>
+                <span class="apa-badge">Chapter 4: Traveling Waves &amp; Dispersion</span>
+              </div>
+            </div>
+
+            <div class="editorial-callout" style="margin-top: 24px; border-left-color: var(--gold-accent);">
+              <div class="callout-header" style="color: var(--gold-accent);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Validación Académica y Rigor Institucional (UTP)</span>
+              </div>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                Todas las deducciones diferenciales, formulaciones analíticas, simulaciones de superposición y problemas resueltos contenidos en este cuaderno han sido rigurosamente cotejados con la literatura académica internacional de referencia para los cursos de Física 3 en los programas de Ingeniería de la <strong>Universidad Tecnológica de Pereira (UTP)</strong>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </main>
+
+    <!-- BARRA INFERIOR PERSISTENTE -->
+    <nav class="bottom-nav-bar" aria-label="Navegación del Cuaderno">
+      <div class="progress-track">
+        <div class="progress-fill" id="dock-progress-fill"></div>
+      </div>
+      <div class="nav-controls-row">
+        <!-- Izquierda: Portada y Anterior -->
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-nav" id="btn-nav-home" onclick="goToPage(1)" title="Ir a la Portada">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Portada</span>
+          </button>
+
+          <button class="btn-nav btn-nav-primary" id="btn-nav-prev" onclick="prevPage()" title="Página Anterior (Flecha Izq)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+            <span>Anterior</span>
+          </button>
+        </div>
+
+        <!-- Centro: Indicador y Selector de Miniaturas -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="page-indicator-pill" id="nav-page-indicator">Página 1 de 12</div>
+
+          <div class="page-quick-selector" id="page-quick-selector">
+            <!-- 12 botones circulares generados por JS -->
+          </div>
+        </div>
+
+        <!-- Derecha: Siguiente -->
+        <div>
+          <button class="btn-nav btn-nav-primary" id="btn-nav-next" onclick="nextPage()" title="Página Siguiente (Flecha Der)">
+            <span>Siguiente</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pie de página oficial requerido -->
+      <footer class="notebook-footer" role="contentinfo">
+        Cuaderno creado por <strong>Angela Morales Osorio</strong>, <strong>Esley Bolaños</strong>, <strong>Ximena Leon</strong> &bull; Universidad Tecnológica de Pereira (UTP)
+      </footer>
+    </nav>
+
+  </div>
+
+  <!-- MODAL PARA PROYECCIÓN EN PANTALLA COMPLETA DE ONDALAB PRO -->
+  <div class="sim-modal-overlay" id="sim-modal-overlay">
+    <div class="sim-modal-header">
+      <div style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--neon-blue);">
+        OndaLab Pro &bull; Modo Proyección a Pantalla Completa
+      </div>
+      <button class="btn-nav" onclick="closeSimModal()" style="padding: 6px 14px;">✕ Cerrar Modal</button>
+    </div>
+    <div style="flex: 1; margin-top: 10px; position: relative;">
+      <canvas id="modal-ondalab-canvas" style="width: 100%; height: 100%; display: block; border-radius: var(--radius-md); background: #040711;"></canvas>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT INTEGRADA, REACTIVA Y 100% AUTÓNOMA
+       ========================================================================== -->
+  <script>
+    // ESTADO GLOBAL DE LA APLICACIÓN
+    const AppState = {
+      currentPage: 1,
+      totalPages: 12,
+      soundEnabled: true,
+      audioCtx: null,
+      activeInputId: 'w1-expr'
+    };
+
+    // GENERAR SELECTOR DE PÁGINAS RÁPIDAS (DOTS 1 A 12)
+    function renderQuickSelector() {
+      const container = document.getElementById('page-quick-selector');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 1; i <= AppState.totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.className = `page-dot ${i === AppState.currentPage ? 'active' : ''}`;
+        btn.textContent = i;
+        btn.title = `Ir a página ${i}`;
+        btn.onclick = () => goToPage(i);
+        container.appendChild(btn);
+      }
+    }
+
+    // NAVEGACIÓN ENTRE PÁGINAS
+    function goToPage(pageNumber) {
+      if (pageNumber < 1 || pageNumber > AppState.totalPages || pageNumber === AppState.currentPage) return;
+
+      const oldPage = document.getElementById(`page-${AppState.currentPage}`);
+      if (oldPage) oldPage.classList.remove('active');
+
+      AppState.currentPage = pageNumber;
+      const newPage = document.getElementById(`page-${AppState.currentPage}`);
+      if (newPage) newPage.classList.add('active');
+
+      // Actualizar indicador
+      const indicator = document.getElementById('nav-page-indicator');
+      if (indicator) indicator.textContent = `Página ${AppState.currentPage} de ${AppState.totalPages}`;
+
+      // Barra de progreso
+      const progressFill = document.getElementById('dock-progress-fill');
+      if (progressFill) {
+        const pct = (AppState.currentPage / AppState.totalPages) * 100;
+        progressFill.style.width = pct.toFixed(1) + '%';
+      }
+
+      // Actualizar dots
+      document.querySelectorAll('.page-dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', (idx + 1) === AppState.currentPage);
+      });
+
+      // Efecto sonoro de pase de página
+      playFlipSound();
+
+      // Desplazar arriba suavemente
+      const book = document.getElementById('notebook-book');
+      if (book) book.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Inicializaciones específicas por página
+      if (AppState.currentPage === 8) {
+        setTimeout(initGeoGebraCanvas, 50);
+      } else if (AppState.currentPage === 9) {
+        setTimeout(initOndaLabCanvas, 50);
+      }
+
+      // Re-renderizar KaTeX
+      if (window.renderMathInElement && newPage) {
+        try {
+          renderMathInElement(newPage, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch(e) {}
+      }
+    }
+
+    function nextPage() {
+      if (AppState.currentPage < AppState.totalPages) {
+        goToPage(AppState.currentPage + 1);
+      }
+    }
+
+    function prevPage() {
+      if (AppState.currentPage > 1) {
+        goToPage(AppState.currentPage - 1);
+      }
+    }
+
+    // EFECTOS SINTÉTICOS DE SONIDO (WEB AUDIO API - 100% OFFLINE)
+    function playFlipSound() {
+      if (!AppState.soundEnabled) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AppState.audioCtx) AppState.audioCtx = new AudioCtx();
+        if (AppState.audioCtx.state === 'suspended') AppState.audioCtx.resume();
+
+        const ctx = AppState.audioCtx;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(360, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.14);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(750, ctx.currentTime);
+
+        gain.gain.setValueAtTime(0.09, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.14);
+      } catch(e) {}
+    }
+
+    function playClickSound() {
+      if (!AppState.soundEnabled) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AppState.audioCtx) AppState.audioCtx = new AudioCtx();
+        if (AppState.audioCtx.state === 'suspended') AppState.audioCtx.resume();
+
+        const ctx = AppState.audioCtx;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } catch(e) {}
+    }
+
+    // BOTONES DE APERTURA Y CABECERA
+    document.getElementById('btn-open-cover')?.addEventListener('click', () => goToPage(2));
+
+    document.getElementById('btn-sound-toggle')?.addEventListener('click', () => {
+      AppState.soundEnabled = !AppState.soundEnabled;
+      const txt = document.getElementById('sound-status-text');
+      if (txt) txt.textContent = AppState.soundEnabled ? 'Sonido ON' : 'Sonido OFF';
+      if (AppState.soundEnabled) playClickSound();
+    });
+
+    document.getElementById('btn-fullscreen')?.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // TECLAS DE NAVEGACIÓN Y GESTOS TÁCTILES
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        nextPage();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevPage();
+      } else if (e.key === 'Home') {
+        goToPage(1);
+      } else if (e.key === 'End') {
+        goToPage(AppState.totalPages);
+      } else if (e.key === 'f' || e.key === 'F') {
+        document.getElementById('btn-fullscreen')?.click();
+      } else if (e.code === 'Space' && AppState.currentPage === 9) {
+        e.preventDefault();
+        document.getElementById('btn-onda-play')?.click();
+      }
+    });
+
+    // Soporte táctil móvil (Swipe en celulares Android / iPhone)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 55) {
+        if (diff < 0) nextPage();
+        else prevPage();
+      }
+    }, { passive: true });
+
+    // ==========================================================================
+    // PÁGINA 3: FILTRO DE LÍNEA DE TIEMPO
+    // ==========================================================================
+    function filterTimeline(era) {
+      playClickSound();
+      document.querySelectorAll('.timeline-filter-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const items = document.querySelectorAll('.timeline-card-item');
+      items.forEach(item => {
+        if (era === 'all') {
+          item.style.display = 'block';
+        } else {
+          item.style.display = item.getAttribute('data-era') === era ? 'block' : 'none';
+        }
+      });
+    }
+
+    // ==========================================================================
+    // PÁGINA 4: INSPECTOR DE CONCEPTOS DEL MAPA MENTAL (SIN ALERTS)
+    // ==========================================================================
+    const mindmapNodesData = {
+      central: {
+        title: "Movimiento Ondulatorio (Concepto Central)",
+        desc: "Una onda es una perturbación auto-propagante que viaja a través del espacio o de un medio elástico continuo, transportando energía, momento lineal e información sin que exista un desplazamiento permanente de materia.",
+        formula: "v = \lambda \cdot f = \omega / k",
+        app: "Comunicaciones ópticas, radar, ecografía médica y ensayos no destructivos de materiales."
+      },
+      medio: {
+        title: "1. Naturaleza del Medio de Propagación",
+        desc: "Ondas Mecánicas (requieren un medio deformable elástico con inercia para propagarse: sonido, ondas en cuerdas, olas) vs Ondas Electromagnéticas (se propagan en el vacío libremente a la rapidez de la luz c gracias a la inducción mutua de campos E y B).",
+        formula: "v_{\text{cuerda}} = \sqrt{\tau / \mu}, \quad c = 1 / \sqrt{\mu_0 \varepsilon_0}",
+        app: "Sismología (ondas P y S), transmisión de radiofrecuencias, telefonía celular satelital y sonar submarino."
+      },
+      direccion: {
+        title: "2. Dirección de Oscilación y Polarización",
+        desc: "Ondas Transversales (las partículas vibran perpendicularmente a la línea de propagación; son susceptibles de polarización: luz, cuerdas) vs Ondas Longitudinales (las partículas vibran paralelamente a la línea de avance en zonas de compresión y rarefacción: sonido en fluidos).",
+        formula: "v_y(x,t) = \frac{\partial y}{\partial t} \perp v_x",
+        app: "Gafas polarizadas antirreflejo, antenas de microondas, altavoces acústicos y prospección geofísica."
+      },
+      parametros: {
+        title: "3. Parámetros Cuantitativos Fundamentales",
+        desc: "Longitud de onda lambda [m], Período T [s], Frecuencia f [Hz], Número de onda k [rad/m], Frecuencia angular omega [rad/s] y Amplitud A [m]. Todos interconectados por la relación de dispersión lineal v = lambda * f.",
+        formula: "k = \frac{2\pi}{\lambda}, \quad \omega = 2\pi f, \quad v = \frac{\omega}{k} = \lambda f",
+        app: "Sintonización de canales de telecomunicaciones, diseño acústico de salas y espectroscopía óptica."
+      },
+      fenomenos: {
+        title: "4. Fenómenos Colectivos e Interferencia",
+        desc: "Principio de Superposición lineal (la elongación resultante es la suma algebraica de las ondas individuales), Interferencia constructiva (en fase) y destructiva (en contrafase), Ondas estacionarias con nodos y vientres inamovibles, Batimiento, Reflexión, Refracción y Difracción.",
+        formula: "Y(x,t) = y_1(x,t) + y_2(x,t) = [2A\cos(kx)]\sin(\omega t)",
+        app: "Auriculares con cancelación activa de ruido (ANC), instrumentos musicales, filtros de interferencia óptica."
+      },
+      dinamica: {
+        title: "5. Dinámica y Transmisión de Potencia",
+        desc: "La energía de la onda se compone de energía cinética de oscilación y energía potencial elástica de deformación. La potencia media transmitida a través de la cuerda es proporcional al cuadrado de la amplitud y de la frecuencia.",
+        formula: "P_{\text{med}} = \frac{1}{2}\mu v \omega^2 A^2 = 2\pi^2 \mu v f^2 A^2",
+        app: "Líneas de transmisión eléctrica, diseño sismorresistente en puentes y cálculo de disipación acústica."
+      }
+    };
+
+    function selectMindmapNode(nodeKey) {
+      playClickSound();
+      const data = mindmapNodesData[nodeKey];
+      if (!data) return;
+
+      const titleEl = document.getElementById('inspector-title');
+      const descEl = document.getElementById('inspector-desc');
+      const formEl = document.getElementById('inspector-formula');
+      const appEl = document.getElementById('inspector-app');
+
+      if (titleEl) titleEl.textContent = data.title;
+      if (descEl) descEl.textContent = data.desc;
+      if (formEl) formEl.textContent = '$' + data.formula + '$';
+      if (appEl) appEl.textContent = data.app;
+
+      const inspectorBox = document.getElementById('concept-inspector');
+      if (inspectorBox && window.renderMathInElement) {
+        try {
+          renderMathInElement(inspectorBox, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch(e) {}
+      }
+    }
+
+    // ==========================================================================
+    // LIENZO 1: PLANO CARTESIANO GEOGEBRA (PÁGINA 8)
+    // ==========================================================================
+    let geoCanvas, geoCtx;
+    let geoZoom = 1.0;
+    let geoPanX = 0;
+    const geoCurvesState = {
+      y: true,
+      vy: false,
+      ay: false,
+      env: true,
+      lambda: true
+    };
+
+    function initGeoGebraCanvas() {
+      geoCanvas = document.getElementById('geogebra-canvas');
+      if (!geoCanvas) return;
+      geoCtx = geoCanvas.getContext('2d');
+
+      const resize = () => {
+        const r = geoCanvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        geoCanvas.width = r.width * dpr;
+        geoCanvas.height = r.height * dpr;
+        geoCanvas.style.width = r.width + 'px';
+        geoCanvas.style.height = r.height + 'px';
+        renderGeoGebra();
+      };
+      resize();
+
+      ['slider-geo-a', 'slider-geo-lambda', 'slider-geo-f'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', () => {
+          updateGeoLabels();
+          renderGeoGebra();
+        });
+      });
+
+      document.getElementById('geo-btn-zoom-in')?.addEventListener('click', () => { geoZoom *= 1.25; renderGeoGebra(); });
+      document.getElementById('geo-btn-zoom-out')?.addEventListener('click', () => { geoZoom /= 1.25; renderGeoGebra(); });
+      document.getElementById('geo-btn-reset')?.addEventListener('click', () => { geoZoom = 1.0; geoPanX = 0; renderGeoGebra(); });
+      document.getElementById('geo-btn-export')?.addEventListener('click', exportGeoGebraPNG);
+
+      // Inspección de coordenadas al pasar el ratón o tocar
+      geoCanvas.addEventListener('mousemove', (e) => {
+        const r = geoCanvas.getBoundingClientRect();
+        const px = e.clientX - r.left;
+        const py = e.clientY - r.top;
+        inspectGeoCoords(px, py);
+      });
+    }
+
+    function toggleGeoCurve(type) {
+      playClickSound();
+      geoCurvesState[type] = !geoCurvesState[type];
+      const el = document.getElementById(`legend-geo-${type}`);
+      if (el) el.classList.toggle('active', geoCurvesState[type]);
+      renderGeoGebra();
+    }
+
+    function updateGeoLabels() {
+      const a = document.getElementById('slider-geo-a')?.value || 2;
+      const l = document.getElementById('slider-geo-lambda')?.value || 6;
+      const f = document.getElementById('slider-geo-f')?.value || 0.5;
+      const lblA = document.getElementById('val-geo-a');
+      const lblL = document.getElementById('val-geo-lambda');
+      const lblF = document.getElementById('val-geo-f');
+      if (lblA) lblA.textContent = `${parseFloat(a).toFixed(1)} m`;
+      if (lblL) lblL.textContent = `${parseFloat(l).toFixed(1)} m`;
+      if (lblF) lblF.textContent = `${parseFloat(f).toFixed(1)} Hz`;
+    }
+
+    function inspectGeoCoords(px, py) {
+      if (!geoCanvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = geoCanvas.width / dpr;
+      const h = geoCanvas.height / dpr;
+      const scale = 40 * geoZoom;
+      const oX = w / 2 + geoPanX;
+      const oY = h / 2;
+
+      const xW = (px - oX) / scale;
+      const amp = parseFloat(document.getElementById('slider-geo-a')?.value || 2);
+      const lam = parseFloat(document.getElementById('slider-geo-lambda')?.value || 6);
+      const f = parseFloat(document.getElementById('slider-geo-f')?.value || 0.5);
+      const k = (2 * Math.PI) / lam;
+      const omega = 2 * Math.PI * f;
+
+      const yVal = amp * Math.sin(k * xW);
+      const vyVal = -omega * amp * Math.cos(k * xW);
+      const ayVal = -omega * omega * yVal;
+
+      const badge = document.getElementById('geo-coord-badge');
+      if (badge) {
+        badge.textContent = `Punto: x = ${xW.toFixed(2)} m | y = ${yVal.toFixed(2)} m | vy = ${vyVal.toFixed(2)} m/s | ay = ${ayVal.toFixed(2)} m/s²`;
+      }
+    }
+
+    function renderGeoGebra() {
+      if (!geoCtx || !geoCanvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = geoCanvas.width / dpr;
+      const h = geoCanvas.height / dpr;
+
+      geoCtx.save();
+      geoCtx.scale(dpr, dpr);
+      geoCtx.fillStyle = '#060a16';
+      geoCtx.fillRect(0, 0, w, h);
+
+      const oX = w / 2 + geoPanX;
+      const oY = h / 2;
+      const scale = 40 * geoZoom;
+
+      // Cuadrícula milimetrada
+      geoCtx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
+      geoCtx.lineWidth = 1;
+      const stepMinor = scale / 5;
+      for (let x = oX % stepMinor; x < w; x += stepMinor) {
+        geoCtx.beginPath(); geoCtx.moveTo(x, 0); geoCtx.lineTo(x, h); geoCtx.stroke();
+      }
+      for (let y = oY % stepMinor; y < h; y += stepMinor) {
+        geoCtx.beginPath(); geoCtx.moveTo(0, y); geoCtx.lineTo(w, y); geoCtx.stroke();
+      }
+
+      // Cuadrícula mayor
+      geoCtx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
+      geoCtx.lineWidth = 1.2;
+      for (let x = oX % scale; x < w; x += scale) {
+        geoCtx.beginPath(); geoCtx.moveTo(x, 0); geoCtx.lineTo(x, h); geoCtx.stroke();
+      }
+      for (let y = oY % scale; y < h; y += scale) {
+        geoCtx.beginPath(); geoCtx.moveTo(0, y); geoCtx.lineTo(w, y); geoCtx.stroke();
+      }
+
+      // Ejes coordenados principales
+      geoCtx.strokeStyle = '#38bdf8';
+      geoCtx.lineWidth = 2;
+      geoCtx.beginPath(); geoCtx.moveTo(0, oY); geoCtx.lineTo(w, oY); geoCtx.stroke();
+      geoCtx.beginPath(); geoCtx.moveTo(oX, 0); geoCtx.lineTo(oX, h); geoCtx.stroke();
+
+      geoCtx.fillStyle = '#94a3b8';
+      geoCtx.font = "11px 'JetBrains Mono', monospace";
+      geoCtx.fillText('x [m]', w - 40, oY - 8);
+      geoCtx.fillText('y [m]', oX + 8, 16);
+
+      const amp = parseFloat(document.getElementById('slider-geo-a')?.value || 2);
+      const lam = parseFloat(document.getElementById('slider-geo-lambda')?.value || 6);
+      const f = parseFloat(document.getElementById('slider-geo-f')?.value || 0.5);
+      const kVal = (2 * Math.PI) / lam;
+      const omegaVal = 2 * Math.PI * f;
+
+      // Envolventes +A y -A
+      if (geoCurvesState.env) {
+        geoCtx.strokeStyle = 'rgba(251, 191, 36, 0.6)';
+        geoCtx.lineWidth = 1.2;
+        geoCtx.setLineDash([4, 4]);
+        const pyPos = oY - (amp * scale);
+        const pyNeg = oY + (amp * scale);
+        geoCtx.beginPath(); geoCtx.moveTo(0, pyPos); geoCtx.lineTo(w, pyPos); geoCtx.stroke();
+        geoCtx.beginPath(); geoCtx.moveTo(0, pyNeg); geoCtx.lineTo(w, pyNeg); geoCtx.stroke();
+        geoCtx.setLineDash([]);
+        geoCtx.fillStyle = '#fbbf24';
+        geoCtx.fillText(`+A = +${amp.toFixed(1)}m`, 10, pyPos - 4);
+        geoCtx.fillText(`-A = -${amp.toFixed(1)}m`, 10, pyNeg + 14);
+      }
+
+      // Cota de longitud de onda lambda
+      if (geoCurvesState.lambda) {
+        const x1 = oX + (lam / 4) * scale;
+        const x2 = x1 + lam * scale;
+        const pyCrest = oY - (amp * scale) - 15;
+        if (x2 < w + 100) {
+          geoCtx.strokeStyle = '#06b6d4';
+          geoCtx.lineWidth = 1.6;
+          geoCtx.beginPath();
+          geoCtx.moveTo(x1, pyCrest); geoCtx.lineTo(x2, pyCrest);
+          geoCtx.moveTo(x1, pyCrest - 5); geoCtx.lineTo(x1, pyCrest + 5);
+          geoCtx.moveTo(x2, pyCrest - 5); geoCtx.lineTo(x2, pyCrest + 5);
+          geoCtx.stroke();
+          geoCtx.fillStyle = '#06b6d4';
+          geoCtx.fillText(`&lambda; = ${lam.toFixed(1)} m`, (x1 + x2) / 2 - 25, pyCrest - 6);
+        }
+      }
+
+      // Curva 2: Velocidad transversal vy(x) (Verde)
+      if (geoCurvesState.vy) {
+        geoCtx.beginPath();
+        geoCtx.strokeStyle = '#10b981';
+        geoCtx.lineWidth = 2.0;
+        const vyScale = scale / Math.max(1, omegaVal);
+        for (let px = 0; px < w; px += 2) {
+          const xWorld = (px - oX) / scale;
+          const vyVal = -omegaVal * amp * Math.cos(kVal * xWorld);
+          const py = oY - (vyVal * vyScale);
+          if (px === 0) geoCtx.moveTo(px, py);
+          else geoCtx.lineTo(px, py);
+        }
+        geoCtx.stroke();
+      }
+
+      // Curva 3: Aceleración transversal ay(x) (Rojo)
+      if (geoCurvesState.ay) {
+        geoCtx.beginPath();
+        geoCtx.strokeStyle = '#f43f5e';
+        geoCtx.lineWidth = 1.8;
+        const ayScale = scale / Math.max(1, omegaVal * omegaVal);
+        for (let px = 0; px < w; px += 2) {
+          const xWorld = (px - oX) / scale;
+          const ayVal = -Math.pow(omegaVal, 2) * amp * Math.sin(kVal * xWorld);
+          const py = oY - (ayVal * ayScale);
+          if (px === 0) geoCtx.moveTo(px, py);
+          else geoCtx.lineTo(px, py);
+        }
+        geoCtx.stroke();
+      }
+
+      // Curva 1: Elongación y(x) (Azul Neón)
+      if (geoCurvesState.y) {
+        geoCtx.beginPath();
+        geoCtx.strokeStyle = '#38bdf8';
+        geoCtx.lineWidth = 2.8;
+        geoCtx.shadowColor = 'rgba(56, 189, 248, 0.5)';
+        geoCtx.shadowBlur = 10;
+
+        for (let px = 0; px < w; px += 2) {
+          const xWorld = (px - oX) / scale;
+          const yWorld = amp * Math.sin(kVal * xWorld);
+          const py = oY - (yWorld * scale);
+          if (px === 0) geoCtx.moveTo(px, py);
+          else geoCtx.lineTo(px, py);
+        }
+        geoCtx.stroke();
+      }
+
+      geoCtx.restore();
+    }
+
+    function exportGeoGebraPNG() {
+      playClickSound();
+      if (!geoCanvas) return;
+      const link = document.createElement('a');
+      link.download = 'geogebra_movimiento_ondulatorio.png';
+      link.href = geoCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // ==========================================================================
+    // LIENZO 2: ONDALAB PRO - SIMULADOR DINÁMICO EN VIVO (PÁGINA 9)
+    // ==========================================================================
+    let ondaCanvas, ondaCtx;
+    let ondaPlaying = true;
+    let ondaTime = 0.0;
+    let ondaLastFrame = performance.now();
+    let ondaSpeed = 1.0;
+
+    function initOndaLabCanvas() {
+      ondaCanvas = document.getElementById('ondalab-canvas');
+      if (!ondaCanvas) return;
+      ondaCtx = ondaCanvas.getContext('2d');
+
+      const resize = () => {
+        const r = ondaCanvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        ondaCanvas.width = r.width * dpr;
+        ondaCanvas.height = r.height * dpr;
+        ondaCanvas.style.width = r.width + 'px';
+        ondaCanvas.style.height = r.height + 'px';
+      };
+      resize();
+
+      document.getElementById('btn-onda-play')?.addEventListener('click', () => {
+        ondaPlaying = !ondaPlaying;
+        const txt = document.getElementById('play-icon-text');
+        if (txt) txt.textContent = ondaPlaying ? '⏸ Pausar' : '▶ Reproducir';
+      });
+
+      document.getElementById('btn-onda-step')?.addEventListener('click', () => {
+        ondaPlaying = false;
+        const txt = document.getElementById('play-icon-text');
+        if (txt) txt.textContent = '▶ Reproducir';
+        ondaTime += 0.05;
+        const tag = document.getElementById('onda-time-tag');
+        if (tag) tag.textContent = `t = ${ondaTime.toFixed(2)} s`;
+        renderOndaLab();
+      });
+
+      document.getElementById('btn-onda-reset')?.addEventListener('click', () => {
+        ondaTime = 0.0;
+        const tag = document.getElementById('onda-time-tag');
+        if (tag) tag.textContent = 't = 0.00 s';
+        renderOndaLab();
+      });
+
+      document.getElementById('onda-speed-select')?.addEventListener('change', (e) => {
+        ondaSpeed = parseFloat(e.target.value) || 1.0;
+      });
+
+      // Rastrear input activo para el teclado virtual
+      ['w1-expr', 'w2-expr'].forEach(id => {
+        const inp = document.getElementById(id);
+        if (inp) {
+          inp.addEventListener('focus', () => { AppState.activeInputId = id; });
+        }
+      });
+
+      requestAnimationFrame(ondaAnimationLoop);
+    }
+
+    function insertKey(val) {
+      playClickSound();
+      const input = document.getElementById(AppState.activeInputId || 'w1-expr');
+      if (!input) return;
+      const start = input.selectionStart || input.value.length;
+      const end = input.selectionEnd || input.value.length;
+      input.value = input.value.substring(0, start) + val + input.value.substring(end);
+      input.focus();
+      input.selectionStart = input.selectionEnd = start + val.length;
+    }
+
+    function ondaAnimationLoop(now) {
+      const dt = (now - ondaLastFrame) / 1000;
+      ondaLastFrame = now;
+
+      if (ondaPlaying) {
+        ondaTime += dt * ondaSpeed;
+        if (ondaTime > 120) ondaTime = 0;
+        const tag = document.getElementById('onda-time-tag');
+        if (tag) tag.textContent = `t = ${ondaTime.toFixed(2)} s`;
+      }
+
+      renderOndaLab();
+      renderModalOndaLab();
+      requestAnimationFrame(ondaAnimationLoop);
+    }
+
+    function evalWave(expr, x, t) {
+      try {
+        let e = expr.toLowerCase();
+        e = e.replace(/sin/g, 'Math.sin').replace(/cos/g, 'Math.cos').replace(/exp/g, 'Math.exp');
+        e = e.replace(/pi/g, 'Math.PI');
+        e = e.replace(/(\d)\s*([a-zA-Z_(])/g, '$1*$2');
+        e = e.replace(/\)\s*\(/g, ')*(');
+        e = e.replace(/\^/g, '**');
+        const fn = new Function('x', 't', `return ${e};`);
+        const res = fn(x, t);
+        return isNaN(res) || !isFinite(res) ? 0 : res;
+      } catch(err) {
+        return 0;
+      }
+    }
+
+    function renderOndaLab() {
+      if (!ondaCtx || !ondaCanvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = ondaCanvas.width / dpr;
+      const h = ondaCanvas.height / dpr;
+
+      ondaCtx.save();
+      ondaCtx.scale(dpr, dpr);
+      ondaCtx.fillStyle = '#060a16';
+      ondaCtx.fillRect(0, 0, w, h);
+
+      const oX = w / 2;
+      const oY = h / 2;
+      const scaleX = 26;
+      const scaleY = 32;
+
+      // Ejes y retícula suave
+      ondaCtx.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+      ondaCtx.lineWidth = 1;
+      for (let x = oX % scaleX; x < w; x += scaleX * 2) {
+        ondaCtx.beginPath(); ondaCtx.moveTo(x, 0); ondaCtx.lineTo(x, h); ondaCtx.stroke();
+      }
+      for (let y = oY % scaleY; y < h; y += scaleY * 2) {
+        ondaCtx.beginPath(); ondaCtx.moveTo(0, y); ondaCtx.lineTo(w, y); ondaCtx.stroke();
+      }
+
+      ondaCtx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+      ondaCtx.lineWidth = 1.4;
+      ondaCtx.beginPath(); ondaCtx.moveTo(0, oY); ondaCtx.lineTo(w, oY); ondaCtx.stroke();
+      ondaCtx.beginPath(); ondaCtx.moveTo(oX, 0); ondaCtx.lineTo(oX, h); ondaCtx.stroke();
+
+      const e1 = document.getElementById('w1-expr')?.value || '2*sin(x-2*t)';
+      const e2 = document.getElementById('w2-expr')?.value || '2*sin(x+2*t)';
+      const showW1 = document.getElementById('w1-visible')?.checked !== false;
+      const showW2 = document.getElementById('w2-visible')?.checked !== false;
+      const showWRes = document.getElementById('wres-visible')?.checked !== false;
+
+      // 1. Onda y1 (Azul)
+      if (showW1) {
+        ondaCtx.beginPath();
+        ondaCtx.strokeStyle = '#38bdf8';
+        ondaCtx.lineWidth = 2.0;
+        for (let px = 0; px < w; px += 3) {
+          const xW = (px - oX) / scaleX;
+          const yW = evalWave(e1, xW, ondaTime);
+          const py = oY - (yW * scaleY);
+          if (px === 0) ondaCtx.moveTo(px, py);
+          else ondaCtx.lineTo(px, py);
+        }
+        ondaCtx.stroke();
+      }
+
+      // 2. Onda y2 (Rojo)
+      if (showW2) {
+        ondaCtx.beginPath();
+        ondaCtx.strokeStyle = '#f43f5e';
+        ondaCtx.lineWidth = 2.0;
+        for (let px = 0; px < w; px += 3) {
+          const xW = (px - oX) / scaleX;
+          const yW = evalWave(e2, xW, ondaTime);
+          const py = oY - (yW * scaleY);
+          if (px === 0) ondaCtx.moveTo(px, py);
+          else ondaCtx.lineTo(px, py);
+        }
+        ondaCtx.stroke();
+      }
+
+      // 3. Onda Resultante Y(x, t) (Púrpura Neón Grueso con sombra)
+      if (showWRes) {
+        ondaCtx.beginPath();
+        ondaCtx.strokeStyle = '#c084fc';
+        ondaCtx.lineWidth = 3.8;
+        ondaCtx.shadowColor = 'rgba(192, 132, 252, 0.6)';
+        ondaCtx.shadowBlur = 12;
+
+        for (let px = 0; px < w; px += 3) {
+          const xW = (px - oX) / scaleX;
+          const yW1 = showW1 ? evalWave(e1, xW, ondaTime) : 0;
+          const yW2 = showW2 ? evalWave(e2, xW, ondaTime) : 0;
+          const py = oY - ((yW1 + yW2) * scaleY);
+          if (px === 0) ondaCtx.moveTo(px, py);
+          else ondaCtx.lineTo(px, py);
+        }
+        ondaCtx.stroke();
+      }
+
+      ondaCtx.restore();
+    }
+
+    function setOndaLabPreset(type) {
+      playClickSound();
+      const w1 = document.getElementById('w1-expr');
+      const w2 = document.getElementById('w2-expr');
+      const tag1 = document.getElementById('w1-dir-tag');
+      const tag2 = document.getElementById('w2-dir-tag');
+      if (!w1 || !w2) return;
+
+      if (type === 'estacionaria') {
+        w1.value = '2 * sin(x - 2 * t)';
+        w2.value = '2 * sin(x + 2 * t)';
+        if (tag1) tag1.textContent = '→ v = +2.0 m/s';
+        if (tag2) tag2.textContent = '← v = -2.0 m/s';
+      } else if (type === 'constructiva') {
+        w1.value = '2.5 / ((x - 2 * t + 8)^2 + 1)';
+        w2.value = '2.5 / ((x + 2 * t - 8)^2 + 1)';
+        if (tag1) tag1.textContent = '→ pulso derecho';
+        if (tag2) tag2.textContent = '← pulso izquierdo';
+      } else if (type === 'destructiva') {
+        w1.value = '2.5 / ((x - 2 * t + 8)^2 + 1)';
+        w2.value = '-2.5 / ((x + 2 * t - 8)^2 + 1)';
+        if (tag1) tag1.textContent = '→ cresta positiva';
+        if (tag2) tag2.textContent = '← valle negativo';
+      } else if (type === 'batimiento') {
+        w1.value = '2 * sin(1.0 * x - 2.0 * t)';
+        w2.value = '2 * sin(0.85 * x - 2.0 * t)';
+        if (tag1) tag1.textContent = 'f₁ = 0.32 Hz';
+        if (tag2) tag2.textContent = 'f₂ = 0.27 Hz';
+      } else if (type === 'paquete') {
+        w1.value = '2.5 * exp(-((x - 2 * t)^2) / 6) * sin(3 * (x - 2 * t))';
+        w2.value = '0';
+        if (tag1) tag1.textContent = '→ paquete gaussiano';
+        if (tag2) tag2.textContent = 'inactivo';
+      }
+      ondaTime = 0;
+    }
+
+    function exportOndaLabPNG() {
+      playClickSound();
+      if (!ondaCanvas) return;
+      const link = document.createElement('a');
+      link.download = 'ondalab_superposicion.png';
+      link.href = ondaCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Modal de simulación
+    function openSimModal() {
+      playClickSound();
+      const modal = document.getElementById('sim-modal-overlay');
+      if (modal) {
+        modal.classList.add('active');
+        const mCanvas = document.getElementById('modal-ondalab-canvas');
+        if (mCanvas) {
+          mCanvas.width = mCanvas.parentElement.clientWidth;
+          mCanvas.height = mCanvas.parentElement.clientHeight;
+        }
+      }
+    }
+
+    function closeSimModal() {
+      playClickSound();
+      const modal = document.getElementById('sim-modal-overlay');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function renderModalOndaLab() {
+      const modal = document.getElementById('sim-modal-overlay');
+      if (!modal || !modal.classList.contains('active')) return;
+      const mCanvas = document.getElementById('modal-ondalab-canvas');
+      if (!mCanvas) return;
+      const ctx = mCanvas.getContext('2d');
+      const w = mCanvas.width;
+      const h = mCanvas.height;
+
+      ctx.fillStyle = '#040711';
+      ctx.fillRect(0, 0, w, h);
+
+      const oX = w / 2;
+      const oY = h / 2;
+      const scaleX = 35;
+      const scaleY = 45;
+
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, oY); ctx.lineTo(w, oY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(oX, 0); ctx.lineTo(oX, h); ctx.stroke();
+
+      const e1 = document.getElementById('w1-expr')?.value || '2*sin(x-2*t)';
+      const e2 = document.getElementById('w2-expr')?.value || '2*sin(x+2*t)';
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 4.0;
+      ctx.shadowColor = 'rgba(192, 132, 252, 0.8)';
+      ctx.shadowBlur = 15;
+
+      for (let px = 0; px < w; px += 3) {
+        const xW = (px - oX) / scaleX;
+        const yW = evalWave(e1, xW, ondaTime) + evalWave(e2, xW, ondaTime);
+        const py = oY - (yW * scaleY);
+        if (px === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+
+    // ==========================================================================
+    // PÁGINA 10: CALCULADORA DEL EJERCICIO 1
+    // ==========================================================================
+    function recalcExercise1() {
+      const tau = parseFloat(document.getElementById('calc-tau')?.value || 130);
+      const L = parseFloat(document.getElementById('calc-l')?.value || 0.65);
+      const mGramos = parseFloat(document.getElementById('calc-m')?.value || 3.25);
+      const f = parseFloat(document.getElementById('calc-f')?.value || 220);
+      const aMM = parseFloat(document.getElementById('calc-a')?.value || 3.5);
+
+      const mKg = mGramos / 1000;
+      const aMetros = aMM / 1000;
+      const mu = mKg / L;
+      const v = Math.sqrt(tau / mu);
+      const lambda = v / f;
+      const k = (2 * Math.PI) / lambda;
+      const vyMax = 2 * Math.PI * f * aMetros;
+      const omega = 2 * Math.PI * f;
+      const pMed = 0.5 * mu * v * Math.pow(omega, 2) * Math.pow(aMetros, 2);
+
+      const badgesBox = document.getElementById('ex1-results-badges');
+      if (badgesBox) {
+        badgesBox.innerHTML = `
+          <span class="badge-item badge-solved">&mu; = ${mu.toFixed(4)} kg/m</span>
+          <span class="badge-item badge-solved">v = ${v.toFixed(2)} m/s</span>
+          <span class="badge-item badge-solved">&lambda; = ${lambda.toFixed(3)} m</span>
+          <span class="badge-item badge-solved">k = ${k.toFixed(2)} rad/m</span>
+          <span class="badge-item badge-solved">v_y,max = ${vyMax.toFixed(3)} m/s</span>
+          <span class="badge-item badge-solved">P_med = ${pMed.toFixed(2)} W</span>
+        `;
+      }
+    }
+
+    // PÁGINA 10: CALIFICAR QUIZ FORMATIVO
+    function gradeQuiz() {
+      playClickSound();
+      let score = 0;
+      const cards = document.querySelectorAll('.quiz-question-card');
+      cards.forEach((card, idx) => {
+        const correct = card.getAttribute('data-correct');
+        const selected = card.querySelector(`input[name="q${idx + 1}"]:checked`);
+        const fb = card.querySelector('.quiz-feedback');
+        if (!fb) return;
+        fb.style.display = 'block';
+
+        if (selected && selected.value === correct) {
+          score++;
+          fb.style.background = 'rgba(16, 185, 129, 0.15)';
+          fb.style.color = '#34d399';
+          fb.style.border = '1px solid #10b981';
+          fb.textContent = '✓ ¡Correcto! Justificación: la relación física es directamente consistente con las leyes de ondas.';
+        } else {
+          fb.style.background = 'rgba(244, 63, 94, 0.15)';
+          fb.style.color = '#f87171';
+          fb.style.border = '1px solid #f43f5e';
+          fb.textContent = `✗ Incorrecto. La respuesta correcta era la opción (${correct.toUpperCase()}).`;
+        }
+      });
+
+      const scoreTag = document.getElementById('quiz-score-tag');
+      if (scoreTag) {
+        scoreTag.textContent = `Puntaje: ${score} de 5 (${(score / 5 * 100).toFixed(0)}%) ${score >= 4 ? '¡Excelente!' : 'Repasa los fundamentos'}`;
+      }
+    }
+
+    // ==========================================================================
+    // PÁGINA 11: BUSCADOR Y FILTROS DEL GLOSARIO
+    // ==========================================================================
+    function filterGlossary() {
+      const term = (document.getElementById('glossary-search')?.value || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('.glossary-card');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(term) ? 'block' : 'none';
+      });
+    }
+
+    function filterGlossaryLetter(range) {
+      playClickSound();
+      document.querySelectorAll('.glossary-filter-chip').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const cards = document.querySelectorAll('.glossary-card');
+      cards.forEach(card => {
+        const letter = (card.getAttribute('data-letter') || '').toUpperCase();
+        if (range === 'all') {
+          card.style.display = 'block';
+        } else if (range === 'A-C') {
+          card.style.display = ['A', 'B', 'C'].includes(letter) ? 'block' : 'none';
+        } else if (range === 'D-F') {
+          card.style.display = ['D', 'E', 'F'].includes(letter) ? 'block' : 'none';
+        } else if (range === 'G-M') {
+          card.style.display = ['G', 'H', 'I', 'J', 'K', 'L', 'M'].includes(letter) ? 'block' : 'none';
+        } else if (range === 'N-P') {
+          card.style.display = ['N', 'O', 'P'].includes(letter) ? 'block' : 'none';
+        } else if (range === 'R-Z') {
+          card.style.display = ['R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'].includes(letter) ? 'block' : 'none';
+        }
+      });
+    }
+
+    // INICIALIZACIÓN GLOBAL
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuickSelector();
+      updateGeoLabels();
+
+      if (window.renderMathInElement) {
+        try {
+          renderMathInElement(document.body, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>

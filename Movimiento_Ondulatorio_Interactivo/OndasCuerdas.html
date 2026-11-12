@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     DERECHOS DE AUTOR  ·  profenestor-autoria
+     © 2024-2026 Msc. Néstor Fabio Montoya Palacios  ·  profenestor.com
+     Obra protegida por la Ley 23 de 1982, la Decisión Andina 351 de 1993 y los
+     tratados internacionales suscritos por la República de Colombia.
+     Se autoriza VER, INTERACTUAR y RESOLVER los talleres sin ánimo de lucro.
+     NO se autoriza reproducir, redistribuir, alojar en otro servidor, modificar,
+     crear obras derivadas, extraer contenido de forma sistemática, comercializar,
+     hacer ingeniería inversa ni entrenar modelos de inteligencia artificial.
+     Condiciones completas: https://profenestor.com/LICENCIA.txt
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<meta name="author" content="Msc. Néstor Fabio Montoya Palacios">
+<meta name="copyright" content="© 2024-2026 Msc. Néstor Fabio Montoya Palacios. Todos los derechos reservados.">
+<meta name="dcterms.rightsHolder" content="Msc. Néstor Fabio Montoya Palacios">
+<link rel="license" href="/LICENCIA.txt">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Simulador Avanzado de Ondas Estacionarias</title>
+    
+    <!-- Librerías Externas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- Variables Globales y Estilos Base --- */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --background-color: #f0f2f5;
+            --white-color: #ffffff;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --speed-color: #f39c12;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--white-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        h2 .fas {
+            margin-right: 10px;
+        }
+
+        /* --- Área de Simulación --- */
+        .simulation-area {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .controls-panel, .results-panel, .chart-container {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .chart-container {
+            background: var(--white-color);
+            padding: 10px;
+            border: 1px solid #ddd;
+            position: relative;
+            min-height: 400px;
+        }
+
+        /* --- Controles --- */
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .control-group span {
+            display: block;
+            text-align: center;
+            background: var(--white-color);
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        /* --- Estilos Modernos para Deslizadores --- */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, #ddd 0%);
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--white-color);
+            border: 3px solid var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            transition: transform .2s;
+        }
+        
+        input[type="range"]#speed {
+             background: linear-gradient(90deg, var(--speed-color) 0%, #ddd 0%);
+        }
+        input[type="range"]#speed::-webkit-slider-thumb {
+            border-color: var(--speed-color);
+        }
+        input[type="range"]#speed::-moz-range-thumb {
+            border-color: var(--speed-color);
+        }
+
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            background: var(--white-color);
+            border: 3px solid var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            transition: transform .2s;
+            border: none;
+        }
+        
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        /* --- Panel de Resultados --- */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .result-item {
+            text-align: center;
+            background: var(--white-color);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .result-item strong {
+            color: var(--secondary-color);
+        }
+
+        .result-item p {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 8px 0;
+        }
+
+        .result-item .formula {
+            font-size: 1em;
+            font-weight: normal;
+            color: var(--dark-color);
+        }
+
+        /* --- Botones --- */
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-control {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            color: var(--white-color);
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-control .fas {
+            margin-right: 8px;
+        }
+
+        #startStopBtn {
+            background-color: var(--success-color);
+        }
+
+        #startStopBtn.playing {
+            background-color: var(--danger-color);
+        }
+
+        .btn-control:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .icon-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        /* --- Ventana Modal --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: var(--white-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5em;
+        }
+
+        details {
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            outline: none;
+        }
+
+        summary h3 {
+            display: inline;
+            color: var(--secondary-color);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-color);
+            color: #7f8c8d;
+        }
+
+        /* --- Responsividad --- */
+        @media (max-width: 992px) {
+            .simulation-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Ondas Estacionarias en una Cuerda</h1>
+            <button id="help-btn" class="icon-btn" aria-label="Ayuda"><i class="fas fa-question-circle"></i></button>
+        </header>
+
+        <main>
+            <div class="simulation-area">
+                <div class="controls-panel">
+                    <h2><i class="fas fa-sliders-h"></i> Panel de Control</h2>
+                    <div class="control-group">
+                        <label for="tension">Tensión (T)</label>
+                        <input type="range" id="tension" min="10" max="200" step="1" value="100">
+                        <span id="tension-value">100 N</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="density">Densidad Lineal (μ)</label>
+                        <input type="range" id="density" min="0.001" max="0.1" step="0.001" value="0.01">
+                        <span id="density-value">0.010 kg/m</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="length">Longitud (L)</label>
+                        <input type="range" id="length" min="0.5" max="10" step="0.1" value="2">
+                        <span id="length-value">2.0 m</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="amplitude">Amplitud (A)</label>
+                        <input type="range" id="amplitude" min="0.05" max="1.0" step="0.05" value="0.5">
+                        <span id="amplitude-value">0.5 m</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="harmonic">Armónico (n)</label>
+                        <input type="range" id="harmonic" min="1" max="10" step="1" value="1">
+                        <span id="harmonic-value">1</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="speed">Velocidad de Reproducción</label>
+                        <input type="range" id="speed" min="0.01" max="0.3" step="0.01" value="0.05">
+                        <span id="speed-value">0.05x</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="waveChart"></canvas>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <h2><i class="fas fa-calculator"></i> Propiedades de la Onda</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <strong>Velocidad de Propagación (v)</strong>
+                        <p id="wave-speed">0.00 m/s</p>
+                        <p class="formula">$$ v = \sqrt{\frac{T}{\mu}} $$</p>
+                    </div>
+                    <div class="result-item">
+                        <strong>Frecuencia (f)</strong>
+                        <p id="frequency">0.00 Hz</p>
+                        <p class="formula">$$ f_n = \frac{n}{2L}v $$</p>
+                    </div>
+                    <div class="result-item">
+                        <strong>Longitud de Onda (λ)</strong>
+                        <p id="wavelength">0.00 m</p>
+                        <p class="formula">$$ \lambda_n = \frac{2L}{n} $$</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="startStopBtn" class="btn-control"><i class="fas fa-play"></i> Iniciar</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Autor: Msc: Néstor Fabio Montoya Palacios y Gemini AI</p>
+        </footer>
+    </div>
+
+    <!-- Ventana Modal de Ayuda -->
+    <div id="help-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="icon-btn close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+            <h2>Guía del Simulador de Ondas</h2>
+            
+            <details open>
+                <summary><h3><i class="fas fa-rocket"></i> ¿Cómo usar el simulador?</h3></summary>
+                <p>
+                    Utiliza los <strong>deslizadores</strong> en el "Panel de Control" para modificar las propiedades físicas de la cuerda y observar cómo cambia la onda en tiempo real.
+                </p>
+                <ul>
+                    <li><strong>Tensión (T):</strong> Afecta la rigidez de la cuerda. Mayor tensión aumenta la velocidad de la onda.</li>
+                    <li><strong>Densidad Lineal (μ):</strong> Es la masa por unidad de longitud. Una cuerda más "pesada" (mayor μ) propagará la onda más lentamente.</li>
+                    <li><strong>Longitud (L):</strong> La longitud de la cuerda entre los dos puntos fijos.</li>
+                    <li><strong>Amplitud (A):</strong> La máxima elongación de la onda.</li>
+                    <li><strong>Armónico (n):</strong> Define el modo de vibración de la onda. El primer armónico (n=1) es la frecuencia fundamental.</li>
+                    <li><strong>Velocidad de Reproducción:</strong> Controla la velocidad de la animación. Un valor de `1.0x` es tiempo real, valores menores la ralentizan.</li>
+                </ul>
+                <p>
+                    Usa el botón <strong>Iniciar/Detener</strong> para animar la onda o pausarla y analizar su forma.
+                </p>
+            </details>
+
+            <details>
+                <summary><h3><i class="fas fa-wave-square"></i> Fundamento Teórico</h3></summary>
+                <p>
+                    Una <strong>onda estacionaria</strong> se forma por la superposición (interferencia) de dos ondas de igual amplitud y frecuencia que se propagan en la misma dirección pero en sentidos opuestos.
+                </p>
+                <ul>
+                    <li><strong>Nodos:</strong> Son los puntos de la cuerda que permanecen inmóviles (amplitud cero). La distancia entre dos nodos consecutivos es media longitud de onda ($$\lambda/2$$).</li>
+                    <li><strong>Antinodos (o Vientres):</strong> Son los puntos donde la amplitud de la vibración es máxima.</li>
+                    <li><strong>Armónicos:</strong> Son los distintos modos de vibración posibles en la cuerda. La frecuencia de cada armónico es un múltiplo entero de la frecuencia fundamental ($$f_n = n \cdot f_1$$).</li>
+                </ul>
+                <p>
+                    Las fórmulas clave que gobiernan este fenómeno se muestran en el panel de "Propiedades de la Onda".
+                </p>
+            </details>
+        </div>
+    </div>
+    
+    <script>
+        /**
+         * @file script.js
+         * @description Lógica para el Simulador Avanzado de Ondas Estacionarias.
+         * @author Asistente de Programación de Google
+         */
+
+        const waveApp = {
+            // --- ESTADO DE LA APLICACIÓN ---
+            config: {
+                tension: 100,
+                density: 0.01,
+                length: 2,
+                amplitude: 0.5,
+                harmonic: 1,
+                playbackSpeed: 0.05, // Valor inicial más lento
+                isAnimating: false,
+                animationFrameId: null,
+                time: 0,
+                prevTimestamp: 0, 
+                chart: null
+            },
+
+            // --- ELEMENTOS DEL DOM ---
+            elements: {
+                tensionSlider: document.getElementById('tension'),
+                densitySlider: document.getElementById('density'),
+                lengthSlider: document.getElementById('length'),
+                amplitudeSlider: document.getElementById('amplitude'),
+                harmonicSlider: document.getElementById('harmonic'),
+                speedSlider: document.getElementById('speed'), 
+                tensionValue: document.getElementById('tension-value'),
+                densityValue: document.getElementById('density-value'),
+                lengthValue: document.getElementById('length-value'),
+                amplitudeValue: document.getElementById('amplitude-value'),
+                harmonicValue: document.getElementById('harmonic-value'),
+                speedValue: document.getElementById('speed-value'), 
+                startStopBtn: document.getElementById('startStopBtn'),
+                helpBtn: document.getElementById('help-btn'),
+                closeModalBtn: document.getElementById('close-modal-btn'),
+                waveSpeedDisplay: document.getElementById('wave-speed'),
+                frequencyDisplay: document.getElementById('frequency'),
+                wavelengthDisplay: document.getElementById('wavelength'),
+                modal: document.getElementById('help-modal'),
+                canvas: document.getElementById('waveChart')
+            },
+
+            init() {
+                this.setupEventListeners();
+                this.createChart();
+                this.updateAll();
+            },
+
+            setupEventListeners() {
+                const sliders = ['tension', 'density', 'length', 'amplitude', 'harmonic', 'speed'];
+                sliders.forEach(id => {
+                    const slider = this.elements[`${id}Slider`];
+                    if (slider) {
+                        slider.addEventListener('input', () => {
+                            this.updateSliderFill(slider);
+                            this.updateAll();
+                        });
+                        this.updateSliderFill(slider);
+                    }
+                });
+
+                this.elements.startStopBtn.addEventListener('click', () => this.toggleAnimation());
+                this.elements.helpBtn.addEventListener('click', () => this.toggleModal(true));
+                this.elements.closeModalBtn.addEventListener('click', () => this.toggleModal(false));
+                this.elements.modal.addEventListener('click', (e) => {
+                    if (e.target === this.elements.modal) this.toggleModal(false);
+                });
+            },
+            
+            updateSliderFill(slider) {
+                const min = parseFloat(slider.min);
+                const max = parseFloat(slider.max);
+                const val = parseFloat(slider.value);
+                const percentage = ((val - min) * 100) / (max - min);
+                const color = slider.id === 'speed' ? 'var(--speed-color)' : 'var(--primary-color)';
+                slider.style.background = `linear-gradient(90deg, ${color} ${percentage}%, #ddd ${percentage}%)`;
+            },
+
+            updateAll() {
+                this.readParameters();
+                this.updateCalculations();
+                if (!this.config.isAnimating) {
+                    this.updateChart();
+                }
+            },
+
+            readParameters() {
+                this.config.tension = parseFloat(this.elements.tensionSlider.value);
+                this.config.density = parseFloat(this.elements.densitySlider.value);
+                this.config.length = parseFloat(this.elements.lengthSlider.value);
+                this.config.amplitude = parseFloat(this.elements.amplitudeSlider.value);
+                this.config.harmonic = parseInt(this.elements.harmonicSlider.value);
+                this.config.playbackSpeed = parseFloat(this.elements.speedSlider.value);
+
+                this.elements.tensionValue.textContent = `${this.config.tension} N`;
+                this.elements.densityValue.textContent = `${this.config.density.toFixed(3)} kg/m`;
+                this.elements.lengthValue.textContent = `${this.config.length.toFixed(1)} m`;
+                this.elements.amplitudeValue.textContent = `${this.config.amplitude.toFixed(2)} m`;
+                this.elements.harmonicValue.textContent = this.config.harmonic;
+                this.elements.speedValue.textContent = `${this.config.playbackSpeed.toFixed(2)}x`;
+            },
+
+            updateCalculations() {
+                const { tension, density, length, harmonic } = this.config;
+                const waveSpeed = Math.sqrt(tension / density); 
+                const frequency = (harmonic * waveSpeed) / (2 * length);
+                const wavelength = (2 * length) / harmonic;
+
+                this.elements.waveSpeedDisplay.textContent = `${waveSpeed.toFixed(2)} m/s`;
+                this.elements.frequencyDisplay.textContent = `${frequency.toFixed(2)} Hz`;
+                this.elements.wavelengthDisplay.textContent = `${wavelength.toFixed(2)} m`;
+                
+                if (window.MathJax) {
+                    MathJax.typesetPromise();
+                }
+            },
+
+            createChart() {
+                const ctx = this.elements.canvas.getContext('2d');
+                this.config.chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: 'Onda Estacionaria',
+                            data: [],
+                            borderColor: 'var(--primary-color)',
+                            borderWidth: 4,
+                            pointRadius: 0,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        scales: {
+                            x: { type: 'linear', title: { display: true, text: 'Posición (m)' }, min: 0 },
+                            y: { title: { display: true, text: 'Amplitud (m)' } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            },
+            
+            updateChart() {
+                const { length, amplitude, harmonic, chart, time } = this.config;
+                const points = 200;
+                const waveData = [];
+
+                const waveSpeed = Math.sqrt(this.config.tension / this.config.density);
+                const frequency = (harmonic * waveSpeed) / (2 * length);
+                const omega = 2 * Math.PI * frequency;
+                const k = (harmonic * Math.PI) / length;
+
+                for (let i = 0; i <= points; i++) {
+                    const x = (i / points) * length;
+                    const y = amplitude * Math.sin(k * x) * Math.cos(omega * time);
+                    waveData.push({ x: x, y: y });
+                }
+
+                chart.data.datasets[0].data = waveData;
+                chart.options.scales.x.max = length;
+                chart.options.scales.y.min = -amplitude * 1.1;
+                chart.options.scales.y.max = amplitude * 1.1;
+                chart.update('none');
+            },
+            
+            toggleAnimation() {
+                this.config.isAnimating = !this.config.isAnimating;
+                if (this.config.isAnimating) {
+                    this.elements.startStopBtn.innerHTML = '<i class="fas fa-pause"></i> Detener';
+                    this.elements.startStopBtn.classList.add('playing');
+                    this.config.prevTimestamp = 0; // Reiniciar para el cálculo de dt
+                    requestAnimationFrame((timestamp) => this.animate(timestamp));
+                } else {
+                    cancelAnimationFrame(this.config.animationFrameId);
+                    this.elements.startStopBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
+                    this.elements.startStopBtn.classList.remove('playing');
+                }
+            },
+
+            animate(timestamp) {
+                if (!this.config.isAnimating) return;
+
+                if (!this.config.prevTimestamp) {
+                    this.config.prevTimestamp = timestamp;
+                }
+                
+                const dt = (timestamp - this.config.prevTimestamp) / 1000; // Delta time en segundos
+                this.config.prevTimestamp = timestamp;
+
+                // Solo avanza el tiempo si dt es razonable (evita saltos grandes si la pestaña pierde el foco)
+                if (dt < 0.1) {
+                    this.config.time += dt * this.config.playbackSpeed;
+                }
+                
+                this.updateChart();
+                
+                this.config.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+            },
+
+            toggleModal(show) {
+                this.elements.modal.classList.toggle('hidden', !show);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            waveApp.init();
+        });
+    </script>
+<script src="../js/cuaderno-buscador-frame.js"></script>
+</body>
+</html>
