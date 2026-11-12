@@ -1,0 +1,1040 @@
+/* ==========================================================================
+   CUADERNO DIGITAL INTERACTIVO DE FÍSICA 3 — PLANOS CARTESIANOS GEOGEBRA
+   Sistema Avanzado de Superposición de Ondas, Toggles Accesibles y Modo Dividido
+   ========================================================================== */
+
+.geogebra-widget {
+  width: 100%;
+  background: #090c14;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   1. BARRA SUPERIOR DE HERRAMIENTAS Y CONTROL GLOBAL ESTILO GEOGEBRA
+   ========================================================================== */
+.geogebra-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(13, 17, 27, 0.96);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  gap: 10px;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+
+.geogebra-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.geogebra-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.geogebra-btn:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+.geogebra-btn.active {
+  background: rgba(212, 175, 55, 0.28);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+}
+
+.geogebra-btn:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+}
+
+.geogebra-btn svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+/* Tooltip */
+.geogebra-btn[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: var(--gold-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+  border: 1px solid var(--border-subtle);
+}
+
+.geogebra-btn:hover[data-tooltip]::after {
+  opacity: 1;
+}
+
+/* Selector de presets educativos */
+.geogebra-select-preset {
+  background: #0c101c;
+  color: var(--gold-light);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  outline: none;
+}
+
+.geogebra-select-preset:focus-visible {
+  outline: 2px solid var(--gold-light);
+}
+
+/* ==========================================================================
+   2. BARRA DE MODO DE VISTA Y TOGGLES GLOBALES
+   ========================================================================== */
+.geogebra-global-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(10, 13, 21, 0.94);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Control Segmentado (Superpuestas | Divididas | Solo Resultante) */
+.geogebra-segmented-control {
+  display: inline-flex;
+  background: rgba(5, 7, 12, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.segmented-option {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  min-height: 38px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.segmented-option:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.segmented-option.active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(170, 130, 18, 0.9) 100%);
+  color: #07090e;
+  box-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
+  font-weight: 700;
+}
+
+.segmented-option:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+}
+
+.segmented-option svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+
+/* Grupo de toggles y botones globales */
+.global-toggles-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   3. INTERRUPTORES DESLIZANTES TIPO TOGGLE (ACCESIBILIDAD >= 44px)
+   ========================================================================== */
+.geogebra-toggle-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px; /* OBLIGATORIO: al menos 44px de alto para accesibilidad táctil */
+  padding: 4px 10px;
+  background: rgba(18, 24, 38, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 24px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  text-decoration: none;
+}
+
+.geogebra-toggle-switch:hover {
+  background: rgba(26, 34, 52, 0.85);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.geogebra-toggle-switch:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+  box-shadow: 0 0 12px rgba(245, 215, 127, 0.5);
+}
+
+.toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.geogebra-toggle-switch[aria-checked="true"] .toggle-icon {
+  color: var(--gold-light);
+}
+
+.toggle-label-text {
+  font-size: 0.77rem;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Riel o Pista del switch deslizante */
+.toggle-track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: #171d2b;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  flex-shrink: 0;
+}
+
+.geogebra-toggle-switch[aria-checked="true"] .toggle-track {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #34d399;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+}
+
+/* Botón deslizante (Thumb) */
+.toggle-thumb {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 17px;
+  height: 17px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+}
+
+.geogebra-toggle-switch[aria-checked="true"] .toggle-thumb {
+  transform: translateX(20px);
+  background: #ffffff;
+}
+
+/* Glifo dentro del thumb (Check o X) para que el estado no dependa solo del color */
+.toggle-glyph-svg {
+  width: 10px;
+  height: 10px;
+  stroke: #1e293b;
+  stroke-width: 2.6;
+  fill: none;
+}
+
+/* Badge textual ON / OFF */
+.toggle-state-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-width: 28px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.geogebra-toggle-switch[aria-checked="true"] .toggle-state-badge {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+/* Modificador para toggle de suma Sigma */
+.geogebra-toggle-switch.toggle-sigma[aria-checked="true"] .toggle-track {
+  background: linear-gradient(135deg, #c084fc 0%, #8a2be2 100%);
+  border-color: #d8b4fe;
+  box-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+}
+
+.geogebra-toggle-switch.toggle-sigma[aria-checked="true"] .toggle-state-badge {
+  color: #d8b4fe;
+  border-color: rgba(216, 180, 254, 0.3);
+  background: rgba(138, 43, 226, 0.18);
+}
+
+/* Modificador para toggle de panel propio */
+.geogebra-toggle-switch.toggle-panel[aria-checked="true"] .toggle-track {
+  background: linear-gradient(135deg, #00f0ff 0%, #0284c7 100%);
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.35);
+}
+
+.geogebra-toggle-switch.toggle-panel[aria-checked="true"] .toggle-state-badge {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(2, 132, 199, 0.18);
+}
+
+/* ==========================================================================
+   4. BARRA DE REPRODUCCIÓN Y CONTROL TEMPORAL (STICKY EN SCROLL Y MÓVIL)
+   ========================================================================== */
+.geogebra-playback-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(8, 11, 18, 0.96);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  gap: 10px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 35;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.playback-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playback-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.playback-btn:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+}
+
+.playback-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+.playback-btn:focus-visible {
+  outline: 2px solid var(--gold-light);
+}
+
+.playback-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.playback-slider {
+  flex: 1;
+  height: 5px;
+  background: #1e2638;
+  border-radius: 3px;
+  outline: none;
+  accent-color: var(--gold-primary);
+  cursor: pointer;
+}
+
+.playback-slider:focus-visible {
+  outline: 2px solid var(--gold-light);
+}
+
+.playback-time-badge {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--cyan-accent);
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  padding: 3px 8px;
+  border-radius: 4px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.speed-select {
+  background: #0d121f;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   5. ESCENARIO GRÁFICO: SUPERPUESTO vs DIVIDIDO
+   ========================================================================== */
+.geogebra-stage-wrap {
+  position: relative;
+  width: 100%;
+  background: #080a10;
+  overflow: hidden;
+}
+
+/* Modo Superpuesto y Solo Resultante (Lienzo único) */
+.geogebra-canvas-wrap {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  cursor: crosshair;
+  background-color: #080a10;
+}
+
+.geogebra-canvas-wrap.panning {
+  cursor: grab;
+}
+
+.geogebra-canvas-wrap.panning:active {
+  cursor: grabbing;
+}
+
+.geogebra-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Modo Dividido (Contenedor apilado verticalmente de paneles independientes) */
+.geogebra-divided-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  max-height: 700px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #06080e;
+  scroll-behavior: smooth;
+}
+
+.geogebra-divided-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.geogebra-divided-container::-webkit-scrollbar-track {
+  background: #0b0e17;
+}
+
+.geogebra-divided-container::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+
+.geogebra-panel-card {
+  background: #090c14;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.geogebra-panel-card:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+}
+
+.geogebra-panel-card.panel-resultant {
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  box-shadow: 0 4px 24px rgba(239, 68, 68, 0.15);
+}
+
+.geogebra-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(13, 17, 28, 0.95);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-header-title-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-color-pill {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+  flex-shrink: 0;
+}
+
+.panel-wave-title {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.panel-eqn-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold-light);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.panel-live-val {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--cyan-accent);
+}
+
+.geogebra-panel-canvas-wrap {
+  width: 100%;
+  height: 240px; /* Altura mínima garantizada por panel */
+  min-height: 220px;
+  position: relative;
+  cursor: crosshair;
+  background: #080a10;
+}
+
+.geogebra-panel-canvas-wrap.panning {
+  cursor: grab;
+}
+
+.geogebra-panel-canvas-wrap.panning:active {
+  cursor: grabbing;
+}
+
+.geogebra-panel-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==========================================================================
+   6. BARRA INFERIOR DE INSPECTOR Y COORDENADAS SINCRONIZADAS
+   ========================================================================== */
+.geogebra-infobar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: rgba(11, 14, 22, 0.98);
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.geogebra-coords {
+  color: var(--cyan-accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.geogebra-coords-cursor {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.geogebra-eqn-preview {
+  color: var(--gold-light);
+  font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   7. LISTA DE COMPONENTES ARMÓNICAS (ONDAS) Y SUS TOGGLES DEDICADOS
+   ========================================================================== */
+.geogebra-components-section {
+  background: rgba(9, 12, 20, 0.98);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 16px;
+}
+
+.components-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.components-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.waves-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wave-component-card {
+  background: rgba(14, 19, 31, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.wave-component-card:hover {
+  background: rgba(18, 25, 42, 0.85);
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.wave-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.wave-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wave-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 8px currentColor;
+}
+
+.wave-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.wave-formula-badge {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-gold);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* Fila de los 3 Toggles Obligatorios + Botón Solo Esta */
+.wave-toggles-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+/* Botón "Solo esta" (modo solista) */
+.btn-solo-wave {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: var(--text-secondary);
+  min-height: 44px; /* Cumple accesibilidad 44px */
+  padding: 4px 12px;
+  border-radius: 22px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-solo-wave:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+}
+
+.btn-solo-wave.active {
+  background: linear-gradient(135deg, rgba(245, 215, 127, 0.9) 0%, rgba(212, 175, 55, 0.9) 100%);
+  color: #080a10;
+  border-color: var(--gold-light);
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+
+.btn-solo-wave:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+}
+
+/* Fila de Parámetros Dinámicos (Amplitud, Frecuencia, Longitud, Fase) */
+.wave-params-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  background: rgba(7, 10, 16, 0.6);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.param-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.param-item label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.param-item label strong {
+  font-family: var(--font-mono);
+  color: var(--gold-light);
+}
+
+.param-slider {
+  width: 100%;
+  height: 4px;
+  accent-color: var(--gold-primary);
+  cursor: pointer;
+}
+
+.param-slider:focus-visible {
+  outline: 2px solid var(--gold-light);
+}
+
+/* ==========================================================================
+   8. PANEL DE ESTILOS EMERGENTE
+   ========================================================================== */
+.geogebra-style-panel {
+  position: absolute;
+  top: 50px;
+  right: 16px;
+  background: var(--bg-glass-elevated);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  width: 300px;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.geogebra-style-panel.show {
+  display: block;
+}
+
+.style-panel-title {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.style-row {
+  margin-bottom: 12px;
+}
+
+.style-row label {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-swatch.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.style-slider {
+  width: 100%;
+  accent-color: var(--gold-primary);
+}
+
+/* ==========================================================================
+   9. MODAL DE AMPLIACIÓN DE GRÁFICA A PANTALLA COMPLETA
+   ========================================================================== */
+.geogebra-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 6, 10, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.geogebra-modal-overlay.show {
+  display: flex;
+  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.geogebra-modal-window {
+  width: 100%;
+  max-width: 1380px;
+  height: 92vh;
+  background: #090c14;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-canvas-wrap {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-close-modal {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--pedagogy-red-border);
+  color: var(--pedagogy-red-text);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.btn-close-modal:hover {
+  background: var(--pedagogy-red-border);
+  color: #fff;
+}
+
+.btn-close-modal:focus-visible {
+  outline: 2px solid #ef4444;
+}
+
+/* ==========================================================================
+   10. RESPONSIVE Y ADAPTACIÓN A DISPOSITIVOS MÓVILES
+   ========================================================================== */
+@media (max-width: 900px) {
+  .geogebra-global-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .geogebra-segmented-control {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .global-toggles-cluster {
+    justify-content: flex-start;
+  }
+  
+  .geogebra-canvas-wrap {
+    height: 320px;
+  }
+  
+  .geogebra-panel-canvas-wrap {
+    height: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+  .segmented-option {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+  
+  .geogebra-toggle-switch {
+    min-height: 44px;
+    padding: 4px 8px;
+    font-size: 0.72rem;
+  }
+  
+  .toggle-track {
+    width: 40px;
+    height: 22px;
+  }
+  
+  .toggle-thumb {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .geogebra-toggle-switch[aria-checked="true"] .toggle-thumb {
+    transform: translateX(18px);
+  }
+  
+  .playback-slider-wrap {
+    width: 100%;
+  }
+  
+  .geogebra-divided-container {
+    max-height: 550px;
+    padding: 8px;
+    gap: 12px;
+  }
+}

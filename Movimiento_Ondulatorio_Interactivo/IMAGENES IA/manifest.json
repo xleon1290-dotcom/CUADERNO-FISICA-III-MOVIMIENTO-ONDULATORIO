@@ -1,0 +1,23 @@
+{
+  "name": "Física 3: Movimiento Ondulatorio y MAS — Cuaderno Digital Interactivo",
+  "short_name": "Física 3 Cuaderno",
+  "description": "Cuaderno Digital Interactivo y Laboratorio Virtual de Física 3: Movimiento Ondulatorio y Movimiento Armónico Simple (MAS). Planos GeoGebra, simulaciones dinámicas y problemas en 5 pasos.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#030712",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "imagenes/portada.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "imagenes/portada.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
